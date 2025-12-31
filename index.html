@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -31,8 +30,7 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        html,
-        body {
+        html, body {
             width: 100%;
             height: 100%;
             background: var(--deep-black);
@@ -413,11 +411,7 @@
             font-size: 1.5rem;
         }
 
-        #galleryScreen,
-        #videosScreen,
-        #browserScreen,
-        #youtubeScreen,
-        #gamesScreen {
+        #galleryScreen, #videosScreen, #browserScreen, #youtubeScreen, #gamesScreen {
             padding-top: 20px;
             padding-bottom: 80px;
             overflow: hidden;
@@ -486,8 +480,7 @@
             transform: scale(0.95);
         }
 
-        .media-item img,
-        .media-item video {
+        .media-item img, .media-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -542,7 +535,7 @@
             display: flex;
             justify-content: space-between;
             z-index: 2001;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
         }
 
         .fullscreen-content {
@@ -552,8 +545,7 @@
             justify-content: center;
         }
 
-        .fullscreen-content img,
-        .fullscreen-content video {
+        .fullscreen-content img, .fullscreen-content video {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
@@ -728,19 +720,9 @@
         }
 
         @keyframes vaultUnlock {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .vault-unlock {
@@ -752,21 +734,22 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .hidden-input {
             display: none;
         }
+        
+        .pin-feedback {
+            margin-top: 10px;
+            color: var(--neon-blue);
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
     </style>
 </head>
-
 <body>
     <div id="setPinScreen" class="screen active">
         <div class="pin-header">
@@ -780,6 +763,7 @@
             <div class="pin-dot" id="pinDot3"></div>
             <div class="pin-dot" id="pinDot4"></div>
         </div>
+        <div class="pin-feedback" id="pinFeedback"></div>
         <div class="keypad">
             <div class="keypad-btn" data-key="1">1</div>
             <div class="keypad-btn" data-key="2">2</div>
@@ -811,22 +795,22 @@
             <button class="calc-btn operator">+/-</button>
             <button class="calc-btn operator">%</button>
             <button class="calc-btn operator">÷</button>
-
+            
             <button class="calc-btn number">7</button>
             <button class="calc-btn number">8</button>
             <button class="calc-btn number">9</button>
             <button class="calc-btn operator">×</button>
-
+            
             <button class="calc-btn number">4</button>
             <button class="calc-btn number">5</button>
             <button class="calc-btn number">6</button>
             <button class="calc-btn operator">-</button>
-
+            
             <button class="calc-btn number">1</button>
             <button class="calc-btn number">2</button>
             <button class="calc-btn number">3</button>
             <button class="calc-btn operator">+</button>
-
+            
             <button class="calc-btn number" style="grid-column: span 2;">0</button>
             <button class="calc-btn number">.</button>
             <button class="calc-btn equals">=</button>
@@ -998,6 +982,7 @@
     <input type="file" id="videoInput" class="hidden-input" accept="video/*" multiple>
 
     <script>
+        // APP STATE
         let currentPin = '';
         let savedPin = localStorage.getItem('vaultPin');
         let calculatorValue = '0';
@@ -1007,10 +992,12 @@
         let db;
         let currentMedia = null;
 
+        // INITIALIZE
         document.addEventListener('DOMContentLoaded', function() {
             updateTime();
             setInterval(updateTime, 1000);
-
+            
+            // Check if PIN is set
             if (!savedPin) {
                 showScreen('setPinScreen');
                 setupPinPad();
@@ -1018,25 +1005,29 @@
                 showScreen('calculatorScreen');
                 setupCalculator();
             }
-
+            
             setupVault();
             initDatabase();
             loadMedia();
         });
 
+        // PIN SETUP - FIXED
         function setupPinPad() {
             const pinKeys = document.querySelectorAll('.keypad-btn[data-key]');
             const pinClear = document.getElementById('pinClear');
             const pinConfirm = document.getElementById('pinConfirm');
             const pinDisplay = document.getElementById('pinDisplay');
             const pinDots = document.querySelectorAll('.pin-dot');
+            const pinFeedback = document.getElementById('pinFeedback');
 
             pinKeys.forEach(key => {
                 key.addEventListener('click', function() {
                     if (currentPin.length < 4) {
                         currentPin += this.getAttribute('data-key');
                         updatePinDisplay();
-
+                        pinFeedback.textContent = `${currentPin.length}/4 digits`;
+                        
+                        // Add ripple effect
                         const ripple = document.createElement('span');
                         ripple.classList.add('ripple');
                         const rect = this.getBoundingClientRect();
@@ -1051,7 +1042,8 @@
             pinClear.addEventListener('click', function() {
                 currentPin = '';
                 updatePinDisplay();
-
+                pinFeedback.textContent = '';
+                
                 const ripple = document.createElement('span');
                 ripple.classList.add('ripple');
                 const rect = this.getBoundingClientRect();
@@ -1063,9 +1055,13 @@
 
             pinConfirm.addEventListener('click', function() {
                 if (currentPin.length === 4) {
+                    // Save PIN
                     localStorage.setItem('vaultPin', currentPin);
                     savedPin = currentPin;
-
+                    pinFeedback.textContent = '✓ PIN set successfully!';
+                    pinFeedback.style.color = '#00ff88';
+                    
+                    // Add ripple effect
                     const ripple = document.createElement('span');
                     ripple.classList.add('ripple');
                     const rect = this.getBoundingClientRect();
@@ -1073,11 +1069,21 @@
                     ripple.style.top = (rect.height / 2) + 'px';
                     this.appendChild(ripple);
                     setTimeout(() => ripple.remove(), 600);
-
+                    
+                    // Transition to calculator
                     setTimeout(() => {
                         showScreen('calculatorScreen');
                         setupCalculator();
-                    }, 300);
+                    }, 800);
+                } else {
+                    pinFeedback.textContent = 'Please enter 4 digits';
+                    pinFeedback.style.color = '#ff4757';
+                    
+                    // Shake animation
+                    pinDisplay.style.animation = 'none';
+                    setTimeout(() => {
+                        pinDisplay.style.animation = 'shake 0.5s ease';
+                    }, 10);
                 }
             });
 
@@ -1087,7 +1093,7 @@
                     display += i < currentPin.length ? currentPin[i] : '_';
                 }
                 pinDisplay.textContent = display;
-
+                
                 pinDots.forEach((dot, index) => {
                     if (index < currentPin.length) {
                         dot.classList.add('filled');
@@ -1096,8 +1102,20 @@
                     }
                 });
             }
+            
+            // Add shake animation for error
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
         }
 
+        // CALCULATOR
         function setupCalculator() {
             const calcButtons = document.querySelectorAll('.calc-btn');
             const calcOutput = document.getElementById('calcOutput');
@@ -1110,7 +1128,8 @@
             calcButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const value = this.textContent;
-
+                    
+                    // Add ripple effect
                     const ripple = document.createElement('span');
                     ripple.classList.add('ripple');
                     const rect = this.getBoundingClientRect();
@@ -1118,13 +1137,15 @@
                     ripple.style.top = (rect.height / 2) + 'px';
                     this.appendChild(ripple);
                     setTimeout(() => ripple.remove(), 600);
-
+                    
                     handleCalculatorInput(value);
                 });
             });
 
+            // Special handling for equals button (also checks for PIN)
             equalsBtn.addEventListener('click', function() {
                 if (calculatorValue === savedPin) {
+                    // PIN entered correctly - unlock vault
                     unlockVault();
                     calculatorValue = '0';
                     calculatorHistory = '';
@@ -1132,13 +1153,14 @@
                     calcHistory.textContent = calculatorHistory;
                     return;
                 }
-
+                
                 handleCalculatorInput('=');
             });
         }
 
         function handleCalculatorInput(value) {
             if (!isNaN(value) || value === '.') {
+                // Number or decimal point
                 if (waitingForOperand) {
                     calculatorValue = value;
                     waitingForOperand = false;
@@ -1146,14 +1168,18 @@
                     calculatorValue = calculatorValue === '0' ? value : calculatorValue + value;
                 }
             } else if (value === 'C') {
+                // Clear
                 calculatorValue = '0';
                 calculatorHistory = '';
                 currentOperator = '';
             } else if (value === '+/-') {
+                // Toggle sign
                 calculatorValue = String(-parseFloat(calculatorValue));
             } else if (value === '%') {
+                // Percentage
                 calculatorValue = String(parseFloat(calculatorValue) / 100);
             } else if (['+', '-', '×', '÷'].includes(value)) {
+                // Operator
                 if (currentOperator && !waitingForOperand) {
                     calculate();
                 }
@@ -1161,12 +1187,13 @@
                 currentOperator = value;
                 waitingForOperand = true;
             } else if (value === '=') {
+                // Equals
                 if (currentOperator && !waitingForOperand) {
                     calculate();
                     currentOperator = '';
                 }
             }
-
+            
             document.getElementById('calcOutput').textContent = calculatorValue;
             document.getElementById('calcHistory').textContent = calculatorHistory;
         }
@@ -1175,28 +1202,22 @@
             const prev = parseFloat(calculatorHistory);
             const current = parseFloat(calculatorValue);
             let result = 0;
-
+            
             switch (currentOperator) {
-                case '+':
-                    result = prev + current;
-                    break;
-                case '-':
-                    result = prev - current;
-                    break;
-                case '×':
-                    result = prev * current;
-                    break;
-                case '÷':
-                    result = prev / current;
-                    break;
+                case '+': result = prev + current; break;
+                case '-': result = prev - current; break;
+                case '×': result = prev * current; break;
+                case '÷': result = prev / current; break;
             }
-
+            
             calculatorValue = String(result);
             calculatorHistory = '';
             waitingForOperand = true;
         }
 
+        // VAULT SYSTEM
         function setupVault() {
+            // Vault cards
             document.querySelectorAll('.vault-card').forEach(card => {
                 if (card.id !== 'lockVaultBtn') {
                     card.addEventListener('click', function() {
@@ -1206,9 +1227,11 @@
                     });
                 }
             });
-
+            
+            // Lock vault button
             document.getElementById('lockVaultBtn').addEventListener('click', lockVault);
-
+            
+            // Bottom navigation
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const screen = this.getAttribute('data-screen');
@@ -1216,25 +1239,30 @@
                     updateNav(screen);
                 });
             });
-
+            
+            // Add photo button
             document.getElementById('addPhotoBtn').addEventListener('click', () => {
                 document.getElementById('photoInput').click();
             });
-
+            
+            // Add video button
             document.getElementById('addVideoBtn').addEventListener('click', () => {
                 document.getElementById('videoInput').click();
             });
-
+            
+            // Browser
             document.getElementById('goBtn').addEventListener('click', loadBrowserUrl);
             document.getElementById('urlInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') loadBrowserUrl();
             });
-
+            
+            // YouTube
             document.getElementById('youtubeSearchBtn').addEventListener('click', searchYouTube);
             document.getElementById('youtubeSearch').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') searchYouTube();
             });
-
+            
+            // Games
             document.querySelectorAll('.game-card').forEach(card => {
                 card.addEventListener('click', function() {
                     const gameUrl = this.getAttribute('data-game');
@@ -1242,27 +1270,34 @@
                     document.getElementById('fullscreenGame').classList.add('active');
                 });
             });
-
+            
+            // File inputs
             document.getElementById('photoInput').addEventListener('change', handlePhotoUpload);
             document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
         }
 
         function unlockVault() {
+            // Show status bar
             document.getElementById('statusBar').style.display = 'flex';
-
+            
+            // Show vault with animation
             showScreen('vaultHome');
             document.getElementById('vaultHome').classList.add('vault-unlock');
-
+            
+            // Show bottom nav with delay
             setTimeout(() => {
                 document.getElementById('bottomNav').classList.add('show');
             }, 400);
         }
 
         function lockVault() {
+            // Hide status bar
             document.getElementById('statusBar').style.display = 'none';
-
+            
+            // Hide bottom nav
             document.getElementById('bottomNav').classList.remove('show');
-
+            
+            // Return to calculator
             showScreen('calculatorScreen');
             calculatorValue = '0';
             calculatorHistory = '';
@@ -1271,14 +1306,19 @@
         }
 
         function showScreen(screenId) {
+            // Hide all screens
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
-
+            
+            // Show requested screen
             document.getElementById(screenId).classList.add('active');
-
+            
+            // Load browser if needed
             if (screenId === 'browserScreen') {
-                loadBrowserUrl();
+                setTimeout(() => {
+                    loadBrowserUrl();
+                }, 100);
             }
         }
 
@@ -1291,30 +1331,25 @@
             });
         }
 
+        // DATABASE (IndexedDB)
         function initDatabase() {
             const request = indexedDB.open('CalcVaultDB', 1);
-
+            
             request.onupgradeneeded = function(event) {
                 db = event.target.result;
                 if (!db.objectStoreNames.contains('photos')) {
-                    db.createObjectStore('photos', {
-                        keyPath: 'id',
-                        autoIncrement: true
-                    });
+                    db.createObjectStore('photos', { keyPath: 'id', autoIncrement: true });
                 }
                 if (!db.objectStoreNames.contains('videos')) {
-                    db.createObjectStore('videos', {
-                        keyPath: 'id',
-                        autoIncrement: true
-                    });
+                    db.createObjectStore('videos', { keyPath: 'id', autoIncrement: true });
                 }
             };
-
+            
             request.onsuccess = function(event) {
                 db = event.target.result;
                 loadMedia();
             };
-
+            
             request.onerror = function(event) {
                 console.error('Database error:', event.target.error);
             };
@@ -1325,26 +1360,28 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const reader = new FileReader();
-
+                
                 reader.onload = function(e) {
                     const transaction = db.transaction(['photos'], 'readwrite');
                     const store = transaction.objectStore('photos');
-
+                    
                     store.add({
                         data: e.target.result,
                         name: file.name,
                         type: file.type,
                         date: new Date().toISOString()
                     });
-
+                    
                     transaction.oncomplete = function() {
                         loadMedia();
+                        alert('Photo added to vault!');
                     };
                 };
-
+                
                 reader.readAsDataURL(file);
             }
-
+            
+            // Reset input
             event.target.value = '';
         }
 
@@ -1353,40 +1390,43 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const reader = new FileReader();
-
+                
                 reader.onload = function(e) {
                     const transaction = db.transaction(['videos'], 'readwrite');
                     const store = transaction.objectStore('videos');
-
+                    
                     store.add({
                         data: e.target.result,
                         name: file.name,
                         type: file.type,
                         date: new Date().toISOString()
                     });
-
+                    
                     transaction.oncomplete = function() {
                         loadMedia();
+                        alert('Video added to vault!');
                     };
                 };
-
+                
                 reader.readAsDataURL(file);
             }
-
+            
+            // Reset input
             event.target.value = '';
         }
 
         function loadMedia() {
             if (!db) return;
-
+            
+            // Load photos
             const photoTransaction = db.transaction(['photos'], 'readonly');
             const photoStore = photoTransaction.objectStore('photos');
             const photoRequest = photoStore.getAll();
-
+            
             photoRequest.onsuccess = function() {
                 const galleryGrid = document.getElementById('galleryGrid');
                 galleryGrid.innerHTML = '';
-
+                
                 photoRequest.result.forEach((photo, index) => {
                     const mediaItem = document.createElement('div');
                     mediaItem.className = 'media-item';
@@ -1396,45 +1436,46 @@
                             <i class="fas fa-times"></i>
                         </div>
                     `;
-
+                    
                     mediaItem.addEventListener('click', () => {
                         openFullscreenMedia(photo.data, 'image', photo.id);
                     });
-
+                    
                     galleryGrid.appendChild(mediaItem);
                 });
-
+                
                 if (photoRequest.result.length === 0) {
                     galleryGrid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-dim);">No photos yet. Tap "Add Photos" to import.</div>';
                 }
             };
-
+            
+            // Load videos
             const videoTransaction = db.transaction(['videos'], 'readonly');
             const videoStore = videoTransaction.objectStore('videos');
             const videoRequest = videoStore.getAll();
-
+            
             videoRequest.onsuccess = function() {
                 const videosGrid = document.getElementById('videosGrid');
                 videosGrid.innerHTML = '';
-
+                
                 videoRequest.result.forEach((video, index) => {
                     const mediaItem = document.createElement('div');
                     mediaItem.className = 'media-item';
                     mediaItem.innerHTML = `
-                        <video src="${video.data}"></video>
+                        <video src="${video.data}" preload="metadata"></video>
                         <div class="play-icon"><i class="fas fa-play"></i></div>
                         <div class="delete-btn" onclick="deleteVideo(${video.id})">
                             <i class="fas fa-times"></i>
                         </div>
                     `;
-
+                    
                     mediaItem.addEventListener('click', () => {
                         openFullscreenMedia(video.data, 'video', video.id);
                     });
-
+                    
                     videosGrid.appendChild(mediaItem);
                 });
-
+                
                 if (videoRequest.result.length === 0) {
                     videosGrid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-dim);">No videos yet. Tap "Add Videos" to import.</div>';
                 }
@@ -1443,11 +1484,11 @@
 
         function deletePhoto(id) {
             if (!confirm('Delete this photo?')) return;
-
+            
             const transaction = db.transaction(['photos'], 'readwrite');
             const store = transaction.objectStore('photos');
             store.delete(id);
-
+            
             transaction.oncomplete = function() {
                 loadMedia();
                 if (currentMedia && currentMedia.id === id && currentMedia.type === 'image') {
@@ -1458,11 +1499,11 @@
 
         function deleteVideo(id) {
             if (!confirm('Delete this video?')) return;
-
+            
             const transaction = db.transaction(['videos'], 'readwrite');
             const store = transaction.objectStore('videos');
             store.delete(id);
-
+            
             transaction.oncomplete = function() {
                 loadMedia();
                 if (currentMedia && currentMedia.id === id && currentMedia.type === 'video') {
@@ -1472,14 +1513,10 @@
         }
 
         function openFullscreenMedia(data, type, id) {
-            currentMedia = {
-                data,
-                type,
-                id
-            };
+            currentMedia = { data, type, id };
             const contentDiv = document.getElementById('fullscreenContent');
             contentDiv.innerHTML = '';
-
+            
             if (type === 'image') {
                 const img = document.createElement('img');
                 img.src = data;
@@ -1491,11 +1528,12 @@
                 video.autoplay = true;
                 contentDiv.appendChild(video);
             }
-
+            
+            // Setup download button
             document.getElementById('downloadMediaBtn').onclick = function() {
                 downloadMedia(data, type === 'image' ? 'photo.jpg' : 'video.mp4');
             };
-
+            
             document.getElementById('fullscreenMedia').classList.add('active');
         }
 
@@ -1516,51 +1554,51 @@
             link.click();
         }
 
+        // BROWSER
         function loadBrowserUrl() {
             const urlInput = document.getElementById('urlInput');
             let url = urlInput.value.trim();
-
+            
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
                 urlInput.value = url;
             }
-
+            
             document.getElementById('browserFrame').src = url;
         }
 
+        // YOUTUBE
         function searchYouTube() {
             const query = document.getElementById('youtubeSearch').value.trim();
             if (query) {
+                // Use YouTube embed with search
                 const videoId = getYouTubeVideoId(query);
                 if (videoId) {
                     document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${videoId}`;
                 } else {
-                    alert('Enter a valid YouTube URL or video ID. For full search, use the Private Browser.');
+                    // If not a direct video ID, try to search (simplified)
+                    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}`;
                 }
             }
         }
 
         function getYouTubeVideoId(url) {
+            // Extract video ID from YouTube URL
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
+        // UTILITIES
         function updateTime() {
             const now = new Date();
-            const timeStr = now.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            const dateStr = now.toLocaleDateString([], {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric'
-            });
-
+            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const dateStr = now.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
+            
             document.getElementById('time').textContent = timeStr;
         }
 
+        // Make functions globally available for onclick handlers
         window.deletePhoto = deletePhoto;
         window.deleteVideo = deleteVideo;
         window.closeFullscreenMedia = closeFullscreenMedia;
@@ -1568,5 +1606,4 @@
         window.lockVault = lockVault;
     </script>
 </body>
-
 </html>
