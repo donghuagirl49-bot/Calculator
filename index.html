@@ -747,6 +747,26 @@
             color: var(--neon-blue);
             font-size: 0.9rem;
             min-height: 20px;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+        }
+        
+        .pin-message {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease;
         }
     </style>
 </head>
@@ -764,18 +784,19 @@
             <div class="pin-dot" id="pinDot4"></div>
         </div>
         <div class="pin-feedback" id="pinFeedback"></div>
+        <div class="pin-message" id="pinMessage">Enter 4 digits and press =</div>
         <div class="keypad">
-            <div class="keypad-btn" data-key="1">1</div>
-            <div class="keypad-btn" data-key="2">2</div>
-            <div class="keypad-btn" data-key="3">3</div>
-            <div class="keypad-btn" data-key="4">4</div>
-            <div class="keypad-btn" data-key="5">5</div>
-            <div class="keypad-btn" data-key="6">6</div>
-            <div class="keypad-btn" data-key="7">7</div>
-            <div class="keypad-btn" data-key="8">8</div>
-            <div class="keypad-btn" data-key="9">9</div>
+            <div class="keypad-btn num-btn" data-key="1">1</div>
+            <div class="keypad-btn num-btn" data-key="2">2</div>
+            <div class="keypad-btn num-btn" data-key="3">3</div>
+            <div class="keypad-btn num-btn" data-key="4">4</div>
+            <div class="keypad-btn num-btn" data-key="5">5</div>
+            <div class="keypad-btn num-btn" data-key="6">6</div>
+            <div class="keypad-btn num-btn" data-key="7">7</div>
+            <div class="keypad-btn num-btn" data-key="8">8</div>
+            <div class="keypad-btn num-btn" data-key="9">9</div>
             <div class="keypad-btn clear" id="pinClear">C</div>
-            <div class="keypad-btn" data-key="0">0</div>
+            <div class="keypad-btn num-btn" data-key="0">0</div>
             <div class="keypad-btn equals" id="pinConfirm">=</div>
         </div>
     </div>
@@ -994,14 +1015,17 @@
 
         // INITIALIZE
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("App loaded");
             updateTime();
             setInterval(updateTime, 1000);
             
             // Check if PIN is set
             if (!savedPin) {
+                console.log("No PIN found, showing set PIN screen");
                 showScreen('setPinScreen');
                 setupPinPad();
             } else {
+                console.log("PIN found, showing calculator");
                 showScreen('calculatorScreen');
                 setupCalculator();
             }
@@ -1011,21 +1035,40 @@
             loadMedia();
         });
 
-        // PIN SETUP - FIXED
+        // PIN SETUP - COMPLETELY REWRITTEN
         function setupPinPad() {
-            const pinKeys = document.querySelectorAll('.keypad-btn[data-key]');
+            console.log("Setting up PIN pad");
+            
+            const numButtons = document.querySelectorAll('.num-btn');
             const pinClear = document.getElementById('pinClear');
             const pinConfirm = document.getElementById('pinConfirm');
             const pinDisplay = document.getElementById('pinDisplay');
             const pinDots = document.querySelectorAll('.pin-dot');
             const pinFeedback = document.getElementById('pinFeedback');
+            const pinMessage = document.getElementById('pinMessage');
 
-            pinKeys.forEach(key => {
-                key.addEventListener('click', function() {
+            // Clear any existing listeners
+            numButtons.forEach(btn => {
+                btn.replaceWith(btn.cloneNode(true));
+            });
+            
+            // Get fresh references
+            const freshNumButtons = document.querySelectorAll('.num-btn');
+            
+            // Number buttons
+            freshNumButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    console.log("Number button clicked:", this.dataset.key);
+                    e.stopPropagation();
+                    
                     if (currentPin.length < 4) {
-                        currentPin += this.getAttribute('data-key');
+                        currentPin += this.dataset.key;
+                        console.log("Current PIN:", currentPin);
                         updatePinDisplay();
+                        
+                        // Update feedback
                         pinFeedback.textContent = `${currentPin.length}/4 digits`;
+                        pinFeedback.style.color = "var(--neon-blue)";
                         
                         // Add ripple effect
                         const ripple = document.createElement('span');
@@ -1039,11 +1082,18 @@
                 });
             });
 
-            pinClear.addEventListener('click', function() {
-                currentPin = '';
-                updatePinDisplay();
-                pinFeedback.textContent = '';
+            // Clear button
+            pinClear.addEventListener('click', function(e) {
+                console.log("Clear button clicked");
+                e.stopPropagation();
                 
+                currentPin = '';
+                console.log("PIN cleared");
+                updatePinDisplay();
+                pinFeedback.textContent = 'Cleared';
+                pinFeedback.style.color = "var(--neon-blue)";
+                
+                // Add ripple effect
                 const ripple = document.createElement('span');
                 ripple.classList.add('ripple');
                 const rect = this.getBoundingClientRect();
@@ -1053,13 +1103,22 @@
                 setTimeout(() => ripple.remove(), 600);
             });
 
-            pinConfirm.addEventListener('click', function() {
+            // Confirm button
+            pinConfirm.addEventListener('click', function(e) {
+                console.log("Confirm button clicked");
+                console.log("Current PIN length:", currentPin.length);
+                console.log("Current PIN value:", currentPin);
+                e.stopPropagation();
+                
                 if (currentPin.length === 4) {
                     // Save PIN
                     localStorage.setItem('vaultPin', currentPin);
                     savedPin = currentPin;
+                    console.log("PIN saved to localStorage:", currentPin);
+                    
                     pinFeedback.textContent = '✓ PIN set successfully!';
                     pinFeedback.style.color = '#00ff88';
+                    pinMessage.textContent = 'Redirecting to calculator...';
                     
                     // Add ripple effect
                     const ripple = document.createElement('span');
@@ -1072,18 +1131,20 @@
                     
                     // Transition to calculator
                     setTimeout(() => {
+                        console.log("Moving to calculator screen");
                         showScreen('calculatorScreen');
                         setupCalculator();
-                    }, 800);
+                    }, 1000);
                 } else {
-                    pinFeedback.textContent = 'Please enter 4 digits';
+                    pinFeedback.textContent = `Need ${4 - currentPin.length} more digit(s)`;
                     pinFeedback.style.color = '#ff4757';
                     
                     // Shake animation
-                    pinDisplay.style.animation = 'none';
-                    setTimeout(() => {
-                        pinDisplay.style.animation = 'shake 0.5s ease';
-                    }, 10);
+                    pinDisplay.classList.remove('shake');
+                    void pinDisplay.offsetWidth; // Trigger reflow
+                    pinDisplay.classList.add('shake');
+                    
+                    console.log("PIN too short, need 4 digits");
                 }
             });
 
@@ -1103,20 +1164,15 @@
                 });
             }
             
-            // Add shake animation for error
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                    20%, 40%, 60%, 80% { transform: translateX(5px); }
-                }
-            `;
-            document.head.appendChild(style);
+            // Initialize display
+            updatePinDisplay();
+            pinFeedback.textContent = 'Enter 4-digit PIN';
+            pinFeedback.style.color = "var(--neon-blue)";
         }
 
         // CALCULATOR
         function setupCalculator() {
+            console.log("Setting up calculator");
             const calcButtons = document.querySelectorAll('.calc-btn');
             const calcOutput = document.getElementById('calcOutput');
             const calcHistory = document.getElementById('calcHistory');
@@ -1144,7 +1200,11 @@
 
             // Special handling for equals button (also checks for PIN)
             equalsBtn.addEventListener('click', function() {
+                console.log("Calculator equals clicked, current value:", calculatorValue);
+                console.log("Saved PIN:", savedPin);
+                
                 if (calculatorValue === savedPin) {
+                    console.log("PIN matches! Unlocking vault...");
                     // PIN entered correctly - unlock vault
                     unlockVault();
                     calculatorValue = '0';
@@ -1217,6 +1277,8 @@
 
         // VAULT SYSTEM
         function setupVault() {
+            console.log("Setting up vault");
+            
             // Vault cards
             document.querySelectorAll('.vault-card').forEach(card => {
                 if (card.id !== 'lockVaultBtn') {
@@ -1277,6 +1339,8 @@
         }
 
         function unlockVault() {
+            console.log("Unlocking vault");
+            
             // Show status bar
             document.getElementById('statusBar').style.display = 'flex';
             
@@ -1291,6 +1355,8 @@
         }
 
         function lockVault() {
+            console.log("Locking vault");
+            
             // Hide status bar
             document.getElementById('statusBar').style.display = 'none';
             
@@ -1306,6 +1372,8 @@
         }
 
         function showScreen(screenId) {
+            console.log("Showing screen:", screenId);
+            
             // Hide all screens
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -1333,6 +1401,7 @@
 
         // DATABASE (IndexedDB)
         function initDatabase() {
+            console.log("Initializing database");
             const request = indexedDB.open('CalcVaultDB', 1);
             
             request.onupgradeneeded = function(event) {
@@ -1347,6 +1416,7 @@
             
             request.onsuccess = function(event) {
                 db = event.target.result;
+                console.log("Database initialized successfully");
                 loadMedia();
             };
             
@@ -1356,6 +1426,7 @@
         }
 
         function handlePhotoUpload(event) {
+            console.log("Photo upload triggered");
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -1386,6 +1457,7 @@
         }
 
         function handleVideoUpload(event) {
+            console.log("Video upload triggered");
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
