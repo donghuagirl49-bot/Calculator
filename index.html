@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CalcVault Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --deep-black: #0a0a0f;
+            --charcoal: #1a1a24;
+            --neon-blue: #00d4ff;
+            --cyan: #00ffea;
+            --purple: #8a2be2;
+            --purple-glow: rgba(138, 43, 226, 0.4);
+            --glass: rgba(30, 30, 46, 0.7);
+            --glass-border: rgba(100, 100, 255, 0.1);
+            --dark-btn: #2a2a3a;
+            --red: #ff4757;
+            --green: #00ff88;
+            --text-light: #f0f0ff;
+            --text-dim: #b0b0cc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: var(--deep-black);
+            color: var(--text-light);
+            overflow: hidden;
+            position: fixed;
+            background: linear-gradient(135deg, var(--deep-black) 0%, var(--charcoal) 100%);
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #setPinScreen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 40px;
+        }
+
+        .pin-header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(to right, var(--neon-blue), var(--purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px var(--purple-glow);
+        }
+
+        .pin-header p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .pin-display {
+            font-size: 2.5rem;
+            letter-spacing: 20px;
+            margin-right: -20px;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            min-width: 300px;
+            text-align: center;
+            color: var(--neon-blue);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .pin-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .pin-dot.filled {
+            background: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-color: transparent;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 320px;
+            margin-top: 20px;
+        }
+
+        .keypad-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--dark-btn);
+            border: none;
+            color: var(--text-light);
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .keypad-btn:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .keypad-btn.operator {
+            background: linear-gradient(145deg, #0066cc, #00aaff);
+            color: white;
+            font-weight: 700;
+        }
+
+        .keypad-btn.equals {
+            background: linear-gradient(145deg, var(--purple), #a855f7);
+            color: white;
+            font-size: 2.2rem;
+            box-shadow: 0 0 30px var(--purple-glow);
+        }
+
+        .keypad-btn.clear {
+            background: linear-gradient(145deg, var(--red), #ff6b81);
+            color: white;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        #calculatorScreen .status-bar {
+            height: 30px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            padding: 0 10px;
+        }
+
+        .calc-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            padding: 30px 20px;
+            font-size: 3.5rem;
+            font-weight: 300;
+            overflow: hidden;
+            text-align: right;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            min-height: 160px;
+        }
+
+        .calc-history {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            min-height: 24px;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .calc-btn {
+            height: 70px;
+            border-radius: 20px;
+            border: none;
+            background: var(--dark-btn);
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .calc-btn:active {
+            transform: scale(0.94);
+        }
+
+        .calc-btn.number {
+            background: rgba(40, 40, 60, 0.9);
+            font-weight: 600;
+        }
+
+        .calc-btn.operator {
+            background: linear-gradient(145deg, #0088cc, #00aaff);
+            color: white;
+            font-weight: 700;
+        }
+
+        .calc-btn.equals {
+            background: linear-gradient(145deg, var(--purple), #a855f7);
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 0 25px var(--purple-glow);
+        }
+
+        .calc-btn.clear {
+            background: linear-gradient(145deg, var(--red), #ff6b81);
+            color: white;
+        }
+
+        #vaultHome {
+            padding-top: 50px;
+        }
+
+        .vault-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        .vault-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--neon-blue), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .vault-header p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .lock-icon {
+            font-size: 3rem;
+            color: var(--green);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--green);
+        }
+
+        .vault-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .vault-card {
+            background: var(--glass);
+            border-radius: 25px;
+            padding: 25px 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 180px;
+        }
+
+        .vault-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .vault-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .vault-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            justify-content: space-around;
+            padding: 15px 10px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .bottom-nav.show {
+            transform: translateY(0);
+            display: flex;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px 15px;
+            border-radius: 15px;
+            min-width: 60px;
+        }
+
+        .nav-item.active {
+            color: var(--neon-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+        }
+
+        #galleryScreen,
+        #videosScreen,
+        #browserScreen,
+        #youtubeScreen,
+        #gamesScreen {
+            padding-top: 20px;
+            padding-bottom: 80px;
+            overflow: hidden;
+        }
+
+        .screen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .screen-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(to right, var(--neon-blue), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .action-btn {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            color: var(--neon-blue);
+            padding: 12px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn:active {
+            background: rgba(0, 212, 255, 0.4);
+            transform: scale(0.95);
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .media-item {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(40, 40, 60, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .media-item:active {
+            transform: scale(0.95);
+        }
+
+        .media-item img,
+        .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-item .play-icon {
+            position: absolute;
+            color: white;
+            font-size: 3rem;
+            opacity: 0.8;
+            text-shadow: 0 0 20px black;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1rem;
+        }
+
+        .fullscreen-media {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .fullscreen-media.active {
+            display: flex;
+        }
+
+        .fullscreen-toolbar {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 2001;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        .fullscreen-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fullscreen-content img,
+        .fullscreen-content video {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        #browserScreen {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .browser-bar {
+            display: flex;
+            padding: 15px 20px;
+            gap: 10px;
+            background: rgba(30, 30, 46, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .url-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .go-btn {
+            background: linear-gradient(145deg, var(--neon-blue), #0099cc);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 25px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .browser-frame {
+            flex: 1;
+            border: none;
+            background: white;
+        }
+
+        .youtube-container {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .youtube-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .youtube-search input {
+            flex: 1;
+            background: rgba(30, 30, 46, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .youtube-search button {
+            background: linear-gradient(145deg, #ff0000, #cc0000);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 25px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .youtube-player-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: black;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .youtube-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, rgba(60, 40, 80, 0.8), rgba(30, 20, 50, 0.8));
+            border-radius: 25px;
+            padding: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .game-card:active {
+            transform: scale(0.97);
+        }
+
+        .game-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--purple);
+            font-size: 2rem;
+            overflow: hidden;
+        }
+
+        .game-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .game-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .fullscreen-game {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .fullscreen-game.active {
+            display: flex;
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @keyframes vaultUnlock {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .vault-unlock {
+            animation: vaultUnlock 0.6s ease forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hidden-input {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="setPinScreen" class="screen active">
+        <div class="pin-header">
+            <h1>Set Your PIN</h1>
+            <p>Create a 4-digit secret code</p>
+        </div>
+        <div class="pin-display" id="pinDisplay">____</div>
+        <div class="pin-dots">
+            <div class="pin-dot" id="pinDot1"></div>
+            <div class="pin-dot" id="pinDot2"></div>
+            <div class="pin-dot" id="pinDot3"></div>
+            <div class="pin-dot" id="pinDot4"></div>
+        </div>
+        <div class="keypad">
+            <div class="keypad-btn" data-key="1">1</div>
+            <div class="keypad-btn" data-key="2">2</div>
+            <div class="keypad-btn" data-key="3">3</div>
+            <div class="keypad-btn" data-key="4">4</div>
+            <div class="keypad-btn" data-key="5">5</div>
+            <div class="keypad-btn" data-key="6">6</div>
+            <div class="keypad-btn" data-key="7">7</div>
+            <div class="keypad-btn" data-key="8">8</div>
+            <div class="keypad-btn" data-key="9">9</div>
+            <div class="keypad-btn clear" id="pinClear">C</div>
+            <div class="keypad-btn" data-key="0">0</div>
+            <div class="keypad-btn equals" id="pinConfirm">=</div>
+        </div>
+    </div>
+
+    <div id="calculatorScreen" class="screen">
+        <div class="status-bar" id="statusBar">
+            <div id="time">00:00</div>
+            <div>CalcVault Pro</div>
+            <div id="battery">100%</div>
+        </div>
+        <div class="calc-display">
+            <div class="calc-history" id="calcHistory"></div>
+            <div id="calcOutput">0</div>
+        </div>
+        <div class="calc-buttons">
+            <button class="calc-btn clear">C</button>
+            <button class="calc-btn operator">+/-</button>
+            <button class="calc-btn operator">%</button>
+            <button class="calc-btn operator">÷</button>
+
+            <button class="calc-btn number">7</button>
+            <button class="calc-btn number">8</button>
+            <button class="calc-btn number">9</button>
+            <button class="calc-btn operator">×</button>
+
+            <button class="calc-btn number">4</button>
+            <button class="calc-btn number">5</button>
+            <button class="calc-btn number">6</button>
+            <button class="calc-btn operator">-</button>
+
+            <button class="calc-btn number">1</button>
+            <button class="calc-btn number">2</button>
+            <button class="calc-btn number">3</button>
+            <button class="calc-btn operator">+</button>
+
+            <button class="calc-btn number" style="grid-column: span 2;">0</button>
+            <button class="calc-btn number">.</button>
+            <button class="calc-btn equals">=</button>
+        </div>
+    </div>
+
+    <div id="vaultHome" class="screen">
+        <div class="vault-header">
+            <div class="lock-icon">
+                <i class="fas fa-lock-open"></i>
+            </div>
+            <h1>Private Vault</h1>
+            <p>Secure local storage • Encrypted protection</p>
+        </div>
+        <div class="vault-grid">
+            <div class="vault-card" data-screen="galleryScreen">
+                <div class="card-icon"><i class="fas fa-images"></i></div>
+                <div class="card-title">Private Gallery</div>
+                <div class="card-desc">Photos hidden from gallery</div>
+            </div>
+            <div class="vault-card" data-screen="videosScreen">
+                <div class="card-icon"><i class="fas fa-video"></i></div>
+                <div class="card-title">Private Videos</div>
+                <div class="card-desc">Personal video collection</div>
+            </div>
+            <div class="vault-card" data-screen="browserScreen">
+                <div class="card-icon"><i class="fas fa-globe"></i></div>
+                <div class="card-title">Private Browser</div>
+                <div class="card-desc">Incognito web browsing</div>
+            </div>
+            <div class="vault-card" data-screen="youtubeScreen">
+                <div class="card-icon"><i class="fab fa-youtube"></i></div>
+                <div class="card-title">YouTube</div>
+                <div class="card-desc">Watch privately</div>
+            </div>
+            <div class="vault-card" data-screen="gamesScreen">
+                <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="card-title">Games Library</div>
+                <div class="card-desc">Premium HTML5 games</div>
+            </div>
+            <div class="vault-card" id="lockVaultBtn">
+                <div class="card-icon"><i class="fas fa-lock"></i></div>
+                <div class="card-title">Lock Vault</div>
+                <div class="card-desc">Return to calculator</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="galleryScreen" class="screen">
+        <div class="screen-header">
+            <div class="screen-title">Private Gallery</div>
+            <div class="action-btn" id="addPhotoBtn">
+                <i class="fas fa-plus"></i> Add Photos
+            </div>
+        </div>
+        <div class="media-grid" id="galleryGrid"></div>
+    </div>
+
+    <div id="videosScreen" class="screen">
+        <div class="screen-header">
+            <div class="screen-title">Private Videos</div>
+            <div class="action-btn" id="addVideoBtn">
+                <i class="fas fa-plus"></i> Add Videos
+            </div>
+        </div>
+        <div class="media-grid" id="videosGrid"></div>
+    </div>
+
+    <div id="browserScreen" class="screen">
+        <div class="browser-bar">
+            <input type="text" class="url-input" id="urlInput" value="https://cse.google.com/cse?cx=11a079372ff6946ed" placeholder="Enter URL or search...">
+            <button class="go-btn" id="goBtn">Go</button>
+        </div>
+        <iframe class="browser-frame" id="browserFrame"></iframe>
+    </div>
+
+    <div id="youtubeScreen" class="screen">
+        <div class="youtube-container">
+            <div class="youtube-search">
+                <input type="text" id="youtubeSearch" placeholder="Search YouTube...">
+                <button id="youtubeSearchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="youtube-player-container">
+                <iframe class="youtube-iframe" id="youtubePlayer" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="gamesScreen" class="screen">
+        <div class="screen-header">
+            <div class="screen-title">Games Library</div>
+            <div class="action-btn" onclick="lockVault()">
+                <i class="fas fa-lock"></i> Lock
+            </div>
+        </div>
+        <div class="games-grid">
+            <div class="game-card" data-game="https://gemioli.com/yetisensation/html5/gemioli/">
+                <div class="game-thumb"><i class="fas fa-snowflake"></i></div>
+                <div class="game-title">Yeti Sensation</div>
+                <div class="game-desc">Slide through icy mountains</div>
+            </div>
+            <div class="game-card" data-game="https://gemioli.com/slinguin/html5/gemioli/">
+                <div class="game-thumb"><i class="fas fa-fish"></i></div>
+                <div class="game-title">Slinguin</div>
+                <div class="game-desc">Launch penguins to catch fish</div>
+            </div>
+            <div class="game-card" data-game="https://gemioli.com/thesaloon/html5/gemioli/">
+                <div class="game-thumb"><i class="fas fa-beer"></i></div>
+                <div class="game-title">The Saloon</div>
+                <div class="game-desc">Wild west bartender game</div>
+            </div>
+            <div class="game-card" data-game="https://gemioli.com/thepirateship/">
+                <div class="game-thumb"><i class="fas fa-skull-crossbones"></i></div>
+                <div class="game-title">Pirate Ship</div>
+                <div class="game-desc">Navigate treacherous seas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-media" id="fullscreenMedia">
+        <div class="fullscreen-toolbar">
+            <div class="action-btn" onclick="closeFullscreenMedia()">
+                <i class="fas fa-times"></i> Close
+            </div>
+            <div class="action-btn" id="downloadMediaBtn">
+                <i class="fas fa-download"></i> Download
+            </div>
+        </div>
+        <div class="fullscreen-content" id="fullscreenContent"></div>
+    </div>
+
+    <div class="fullscreen-game" id="fullscreenGame">
+        <div class="fullscreen-toolbar">
+            <div class="action-btn" onclick="closeFullscreenGame()">
+                <i class="fas fa-times"></i> Exit Game
+            </div>
+        </div>
+        <iframe class="game-iframe" id="gameIframe"></iframe>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item active" data-screen="vaultHome">
+            <i class="fas fa-home nav-icon"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" data-screen="galleryScreen">
+            <i class="fas fa-images nav-icon"></i>
+            <span>Gallery</span>
+        </div>
+        <div class="nav-item" data-screen="videosScreen">
+            <i class="fas fa-video nav-icon"></i>
+            <span>Videos</span>
+        </div>
+        <div class="nav-item" data-screen="browserScreen">
+            <i class="fas fa-globe nav-icon"></i>
+            <span>Browser</span>
+        </div>
+        <div class="nav-item" data-screen="youtubeScreen">
+            <i class="fab fa-youtube nav-icon"></i>
+            <span>YouTube</span>
+        </div>
+        <div class="nav-item" data-screen="gamesScreen">
+            <i class="fas fa-gamepad nav-icon"></i>
+            <span>Games</span>
+        </div>
+    </div>
+
+    <input type="file" id="photoInput" class="hidden-input" accept="image/*" multiple>
+    <input type="file" id="videoInput" class="hidden-input" accept="video/*" multiple>
+
+    <script>
+        let currentPin = '';
+        let savedPin = localStorage.getItem('vaultPin');
+        let calculatorValue = '0';
+        let calculatorHistory = '';
+        let currentOperator = '';
+        let waitingForOperand = false;
+        let db;
+        let currentMedia = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            if (!savedPin) {
+                showScreen('setPinScreen');
+                setupPinPad();
+            } else {
+                showScreen('calculatorScreen');
+                setupCalculator();
+            }
+
+            setupVault();
+            initDatabase();
+            loadMedia();
+        });
+
+        function setupPinPad() {
+            const pinKeys = document.querySelectorAll('.keypad-btn[data-key]');
+            const pinClear = document.getElementById('pinClear');
+            const pinConfirm = document.getElementById('pinConfirm');
+            const pinDisplay = document.getElementById('pinDisplay');
+            const pinDots = document.querySelectorAll('.pin-dot');
+
+            pinKeys.forEach(key => {
+                key.addEventListener('click', function() {
+                    if (currentPin.length < 4) {
+                        currentPin += this.getAttribute('data-key');
+                        updatePinDisplay();
+
+                        const ripple = document.createElement('span');
+                        ripple.classList.add('ripple');
+                        const rect = this.getBoundingClientRect();
+                        ripple.style.left = (rect.width / 2) + 'px';
+                        ripple.style.top = (rect.height / 2) + 'px';
+                        this.appendChild(ripple);
+                        setTimeout(() => ripple.remove(), 600);
+                    }
+                });
+            });
+
+            pinClear.addEventListener('click', function() {
+                currentPin = '';
+                updatePinDisplay();
+
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = this.getBoundingClientRect();
+                ripple.style.left = (rect.width / 2) + 'px';
+                ripple.style.top = (rect.height / 2) + 'px';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+
+            pinConfirm.addEventListener('click', function() {
+                if (currentPin.length === 4) {
+                    localStorage.setItem('vaultPin', currentPin);
+                    savedPin = currentPin;
+
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    const rect = this.getBoundingClientRect();
+                    ripple.style.left = (rect.width / 2) + 'px';
+                    ripple.style.top = (rect.height / 2) + 'px';
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+
+                    setTimeout(() => {
+                        showScreen('calculatorScreen');
+                        setupCalculator();
+                    }, 300);
+                }
+            });
+
+            function updatePinDisplay() {
+                let display = '';
+                for (let i = 0; i < 4; i++) {
+                    display += i < currentPin.length ? currentPin[i] : '_';
+                }
+                pinDisplay.textContent = display;
+
+                pinDots.forEach((dot, index) => {
+                    if (index < currentPin.length) {
+                        dot.classList.add('filled');
+                    } else {
+                        dot.classList.remove('filled');
+                    }
+                });
+            }
+        }
+
+        function setupCalculator() {
+            const calcButtons = document.querySelectorAll('.calc-btn');
+            const calcOutput = document.getElementById('calcOutput');
+            const calcHistory = document.getElementById('calcHistory');
+            const equalsBtn = document.querySelector('.calc-btn.equals');
+
+            calcOutput.textContent = calculatorValue;
+            calcHistory.textContent = calculatorHistory;
+
+            calcButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const value = this.textContent;
+
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    const rect = this.getBoundingClientRect();
+                    ripple.style.left = (rect.width / 2) + 'px';
+                    ripple.style.top = (rect.height / 2) + 'px';
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+
+                    handleCalculatorInput(value);
+                });
+            });
+
+            equalsBtn.addEventListener('click', function() {
+                if (calculatorValue === savedPin) {
+                    unlockVault();
+                    calculatorValue = '0';
+                    calculatorHistory = '';
+                    calcOutput.textContent = calculatorValue;
+                    calcHistory.textContent = calculatorHistory;
+                    return;
+                }
+
+                handleCalculatorInput('=');
+            });
+        }
+
+        function handleCalculatorInput(value) {
+            if (!isNaN(value) || value === '.') {
+                if (waitingForOperand) {
+                    calculatorValue = value;
+                    waitingForOperand = false;
+                } else {
+                    calculatorValue = calculatorValue === '0' ? value : calculatorValue + value;
+                }
+            } else if (value === 'C') {
+                calculatorValue = '0';
+                calculatorHistory = '';
+                currentOperator = '';
+            } else if (value === '+/-') {
+                calculatorValue = String(-parseFloat(calculatorValue));
+            } else if (value === '%') {
+                calculatorValue = String(parseFloat(calculatorValue) / 100);
+            } else if (['+', '-', '×', '÷'].includes(value)) {
+                if (currentOperator && !waitingForOperand) {
+                    calculate();
+                }
+                calculatorHistory = calculatorValue + ' ' + value;
+                currentOperator = value;
+                waitingForOperand = true;
+            } else if (value === '=') {
+                if (currentOperator && !waitingForOperand) {
+                    calculate();
+                    currentOperator = '';
+                }
+            }
+
+            document.getElementById('calcOutput').textContent = calculatorValue;
+            document.getElementById('calcHistory').textContent = calculatorHistory;
+        }
+
+        function calculate() {
+            const prev = parseFloat(calculatorHistory);
+            const current = parseFloat(calculatorValue);
+            let result = 0;
+
+            switch (currentOperator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '×':
+                    result = prev * current;
+                    break;
+                case '÷':
+                    result = prev / current;
+                    break;
+            }
+
+            calculatorValue = String(result);
+            calculatorHistory = '';
+            waitingForOperand = true;
+        }
+
+        function setupVault() {
+            document.querySelectorAll('.vault-card').forEach(card => {
+                if (card.id !== 'lockVaultBtn') {
+                    card.addEventListener('click', function() {
+                        const screen = this.getAttribute('data-screen');
+                        showScreen(screen);
+                        updateNav(screen);
+                    });
+                }
+            });
+
+            document.getElementById('lockVaultBtn').addEventListener('click', lockVault);
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const screen = this.getAttribute('data-screen');
+                    showScreen(screen);
+                    updateNav(screen);
+                });
+            });
+
+            document.getElementById('addPhotoBtn').addEventListener('click', () => {
+                document.getElementById('photoInput').click();
+            });
+
+            document.getElementById('addVideoBtn').addEventListener('click', () => {
+                document.getElementById('videoInput').click();
+            });
+
+            document.getElementById('goBtn').addEventListener('click', loadBrowserUrl);
+            document.getElementById('urlInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loadBrowserUrl();
+            });
+
+            document.getElementById('youtubeSearchBtn').addEventListener('click', searchYouTube);
+            document.getElementById('youtubeSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchYouTube();
+            });
+
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const gameUrl = this.getAttribute('data-game');
+                    document.getElementById('gameIframe').src = gameUrl;
+                    document.getElementById('fullscreenGame').classList.add('active');
+                });
+            });
+
+            document.getElementById('photoInput').addEventListener('change', handlePhotoUpload);
+            document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
+        }
+
+        function unlockVault() {
+            document.getElementById('statusBar').style.display = 'flex';
+
+            showScreen('vaultHome');
+            document.getElementById('vaultHome').classList.add('vault-unlock');
+
+            setTimeout(() => {
+                document.getElementById('bottomNav').classList.add('show');
+            }, 400);
+        }
+
+        function lockVault() {
+            document.getElementById('statusBar').style.display = 'none';
+
+            document.getElementById('bottomNav').classList.remove('show');
+
+            showScreen('calculatorScreen');
+            calculatorValue = '0';
+            calculatorHistory = '';
+            document.getElementById('calcOutput').textContent = calculatorValue;
+            document.getElementById('calcHistory').textContent = calculatorHistory;
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            document.getElementById(screenId).classList.add('active');
+
+            if (screenId === 'browserScreen') {
+                loadBrowserUrl();
+            }
+        }
+
+        function updateNav(screenId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-screen') === screenId) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function initDatabase() {
+            const request = indexedDB.open('CalcVaultDB', 1);
+
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains('photos')) {
+                    db.createObjectStore('photos', {
+                        keyPath: 'id',
+                        autoIncrement: true
+                    });
+                }
+                if (!db.objectStoreNames.contains('videos')) {
+                    db.createObjectStore('videos', {
+                        keyPath: 'id',
+                        autoIncrement: true
+                    });
+                }
+            };
+
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                loadMedia();
+            };
+
+            request.onerror = function(event) {
+                console.error('Database error:', event.target.error);
+            };
+        }
+
+        function handlePhotoUpload(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const transaction = db.transaction(['photos'], 'readwrite');
+                    const store = transaction.objectStore('photos');
+
+                    store.add({
+                        data: e.target.result,
+                        name: file.name,
+                        type: file.type,
+                        date: new Date().toISOString()
+                    });
+
+                    transaction.oncomplete = function() {
+                        loadMedia();
+                    };
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            event.target.value = '';
+        }
+
+        function handleVideoUpload(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const transaction = db.transaction(['videos'], 'readwrite');
+                    const store = transaction.objectStore('videos');
+
+                    store.add({
+                        data: e.target.result,
+                        name: file.name,
+                        type: file.type,
+                        date: new Date().toISOString()
+                    });
+
+                    transaction.oncomplete = function() {
+                        loadMedia();
+                    };
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            event.target.value = '';
+        }
+
+        function loadMedia() {
+            if (!db) return;
+
+            const photoTransaction = db.transaction(['photos'], 'readonly');
+            const photoStore = photoTransaction.objectStore('photos');
+            const photoRequest = photoStore.getAll();
+
+            photoRequest.onsuccess = function() {
+                const galleryGrid = document.getElementById('galleryGrid');
+                galleryGrid.innerHTML = '';
+
+                photoRequest.result.forEach((photo, index) => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    mediaItem.innerHTML = `
+                        <img src="${photo.data}" alt="Photo">
+                        <div class="delete-btn" onclick="deletePhoto(${photo.id})">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    `;
+
+                    mediaItem.addEventListener('click', () => {
+                        openFullscreenMedia(photo.data, 'image', photo.id);
+                    });
+
+                    galleryGrid.appendChild(mediaItem);
+                });
+
+                if (photoRequest.result.length === 0) {
+                    galleryGrid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-dim);">No photos yet. Tap "Add Photos" to import.</div>';
+                }
+            };
+
+            const videoTransaction = db.transaction(['videos'], 'readonly');
+            const videoStore = videoTransaction.objectStore('videos');
+            const videoRequest = videoStore.getAll();
+
+            videoRequest.onsuccess = function() {
+                const videosGrid = document.getElementById('videosGrid');
+                videosGrid.innerHTML = '';
+
+                videoRequest.result.forEach((video, index) => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    mediaItem.innerHTML = `
+                        <video src="${video.data}"></video>
+                        <div class="play-icon"><i class="fas fa-play"></i></div>
+                        <div class="delete-btn" onclick="deleteVideo(${video.id})">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    `;
+
+                    mediaItem.addEventListener('click', () => {
+                        openFullscreenMedia(video.data, 'video', video.id);
+                    });
+
+                    videosGrid.appendChild(mediaItem);
+                });
+
+                if (videoRequest.result.length === 0) {
+                    videosGrid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-dim);">No videos yet. Tap "Add Videos" to import.</div>';
+                }
+            };
+        }
+
+        function deletePhoto(id) {
+            if (!confirm('Delete this photo?')) return;
+
+            const transaction = db.transaction(['photos'], 'readwrite');
+            const store = transaction.objectStore('photos');
+            store.delete(id);
+
+            transaction.oncomplete = function() {
+                loadMedia();
+                if (currentMedia && currentMedia.id === id && currentMedia.type === 'image') {
+                    closeFullscreenMedia();
+                }
+            };
+        }
+
+        function deleteVideo(id) {
+            if (!confirm('Delete this video?')) return;
+
+            const transaction = db.transaction(['videos'], 'readwrite');
+            const store = transaction.objectStore('videos');
+            store.delete(id);
+
+            transaction.oncomplete = function() {
+                loadMedia();
+                if (currentMedia && currentMedia.id === id && currentMedia.type === 'video') {
+                    closeFullscreenMedia();
+                }
+            };
+        }
+
+        function openFullscreenMedia(data, type, id) {
+            currentMedia = {
+                data,
+                type,
+                id
+            };
+            const contentDiv = document.getElementById('fullscreenContent');
+            contentDiv.innerHTML = '';
+
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = data;
+                contentDiv.appendChild(img);
+            } else if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = data;
+                video.controls = true;
+                video.autoplay = true;
+                contentDiv.appendChild(video);
+            }
+
+            document.getElementById('downloadMediaBtn').onclick = function() {
+                downloadMedia(data, type === 'image' ? 'photo.jpg' : 'video.mp4');
+            };
+
+            document.getElementById('fullscreenMedia').classList.add('active');
+        }
+
+        function closeFullscreenMedia() {
+            document.getElementById('fullscreenMedia').classList.remove('active');
+            currentMedia = null;
+        }
+
+        function closeFullscreenGame() {
+            document.getElementById('fullscreenGame').classList.remove('active');
+            document.getElementById('gameIframe').src = '';
+        }
+
+        function downloadMedia(data, filename) {
+            const link = document.createElement('a');
+            link.href = data;
+            link.download = filename;
+            link.click();
+        }
+
+        function loadBrowserUrl() {
+            const urlInput = document.getElementById('urlInput');
+            let url = urlInput.value.trim();
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+                urlInput.value = url;
+            }
+
+            document.getElementById('browserFrame').src = url;
+        }
+
+        function searchYouTube() {
+            const query = document.getElementById('youtubeSearch').value.trim();
+            if (query) {
+                const videoId = getYouTubeVideoId(query);
+                if (videoId) {
+                    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${videoId}`;
+                } else {
+                    alert('Enter a valid YouTube URL or video ID. For full search, use the Private Browser.');
+                }
+            }
+        }
+
+        function getYouTubeVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const dateStr = now.toLocaleDateString([], {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            document.getElementById('time').textContent = timeStr;
+        }
+
+        window.deletePhoto = deletePhoto;
+        window.deleteVideo = deleteVideo;
+        window.closeFullscreenMedia = closeFullscreenMedia;
+        window.closeFullscreenGame = closeFullscreenGame;
+        window.lockVault = lockVault;
+    </script>
+</body>
+
+</html>
