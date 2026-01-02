@@ -12,14 +12,15 @@
             --neon-blue: #00d4ff;
             --cyan: #00ffea;
             --purple: #8a2be2;
-            --purple-glow: rgba(138, 43, 226, 0.4);
-            --glass: rgba(30, 30, 46, 0.7);
-            --glass-border: rgba(100, 100, 255, 0.1);
-            --dark-btn: #2a2a3a;
+            --purple-glow: rgba(138, 43, 226, 0.6);
+            --glass: rgba(25, 25, 35, 0.8);
+            --glass-border: rgba(100, 100, 255, 0.2);
+            --dark-btn: #2d2d40;
             --red: #ff4757;
             --green: #00ff88;
             --text-light: #f0f0ff;
             --text-dim: #b0b0cc;
+            --gold: #ffd700;
         }
 
         * {
@@ -37,7 +38,7 @@
             color: var(--text-light);
             overflow: hidden;
             position: fixed;
-            background: linear-gradient(135deg, var(--deep-black) 0%, var(--charcoal) 100%);
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 50%, #2a1a40 100%);
         }
 
         .screen {
@@ -49,131 +50,193 @@
             display: none;
             flex-direction: column;
             padding: 20px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(26, 26, 36, 0.95) 100%);
+            backdrop-filter: blur(20px);
         }
 
         .screen.active {
             display: flex;
-            opacity: 1;
         }
 
+        /* SET PIN SCREEN - PREMIUM DESIGN */
         #setPinScreen {
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 40px;
+            gap: 30px;
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.98) 0%, rgba(20, 15, 35, 0.98) 100%);
+        }
+
+        .pin-header {
+            margin-bottom: 20px;
         }
 
         .pin-header h1 {
-            font-size: 2.2rem;
-            background: linear-gradient(to right, var(--neon-blue), var(--purple));
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--neon-blue), var(--purple), var(--gold));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-bottom: 10px;
-            text-shadow: 0 0 15px var(--purple-glow);
+            letter-spacing: 1px;
+            text-shadow: 0 0 30px var(--purple-glow);
         }
 
         .pin-header p {
             color: var(--text-dim);
-            font-size: 1rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .pin-display-container {
+            position: relative;
+            margin: 30px 0;
         }
 
         .pin-display {
-            font-size: 2.5rem;
-            letter-spacing: 20px;
-            margin-right: -20px;
-            padding: 20px 40px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
+            font-size: 3.5rem;
+            letter-spacing: 25px;
+            margin-right: -25px;
+            padding: 30px 50px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 25px;
             border: 2px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            min-width: 300px;
+            backdrop-filter: blur(15px);
+            min-width: 350px;
             text-align: center;
             color: var(--neon-blue);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
         }
 
         .pin-dots {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             margin-top: 20px;
         }
 
         .pin-dot {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
         }
 
         .pin-dot.filled {
             background: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue);
+            box-shadow: 0 0 25px var(--neon-blue),
+                        0 0 50px rgba(0, 212, 255, 0.3);
             border-color: transparent;
+            transform: scale(1.2);
         }
 
+        .pin-feedback {
+            margin: 15px 0;
+            color: var(--neon-blue);
+            font-size: 1rem;
+            min-height: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* PREMIUM KEYPAD */
         .keypad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            max-width: 320px;
+            max-width: 340px;
             margin-top: 20px;
         }
 
         .keypad-btn {
-            width: 80px;
-            height: 80px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
-            background: var(--dark-btn);
+            background: linear-gradient(145deg, #2d2d40, #232330);
             border: none;
             color: var(--text-light);
-            font-size: 1.8rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4),
+                        0 5px 5px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.15s;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
             user-select: none;
+            transform-style: preserve-3d;
+        }
+
+        .keypad-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .keypad-btn:hover::before {
+            opacity: 1;
         }
 
         .keypad-btn:active {
-            transform: scale(0.92);
-            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.92) translateY(2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3),
+                        0 2px 2px rgba(0, 0, 0, 0.2);
         }
 
-        .keypad-btn.operator {
-            background: linear-gradient(145deg, #0066cc, #00aaff);
-            color: white;
-            font-weight: 700;
+        .keypad-btn.num-btn {
+            background: linear-gradient(145deg, #3a3a50, #2d2d40);
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .keypad-btn.num-btn:active {
+            background: linear-gradient(145deg, #4a4a60, #3a3a50);
         }
 
         .keypad-btn.equals {
-            background: linear-gradient(145deg, var(--purple), #a855f7);
+            background: linear-gradient(145deg, var(--purple), #9d4edd);
             color: white;
-            font-size: 2.2rem;
-            box-shadow: 0 0 30px var(--purple-glow);
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px var(--purple-glow),
+                        0 5px 10px rgba(138, 43, 226, 0.4);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .keypad-btn.equals:active {
+            box-shadow: 0 5px 20px var(--purple-glow),
+                        0 2px 5px rgba(138, 43, 226, 0.4);
         }
 
         .keypad-btn.clear {
             background: linear-gradient(145deg, var(--red), #ff6b81);
             color: white;
+            font-weight: 800;
         }
 
         .ripple {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
             transform: scale(0);
-            animation: ripple 0.6s linear;
+            animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
         }
 
         @keyframes ripple {
@@ -183,14 +246,22 @@
             }
         }
 
-        #calculatorScreen .status-bar {
-            height: 30px;
+        /* CALCULATOR SCREEN - PREMIUM */
+        #calculatorScreen {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 100%);
+        }
+
+        .status-bar {
+            height: 40px;
             display: none;
             justify-content: space-between;
             align-items: center;
+            padding: 0 20px;
             font-size: 0.9rem;
             color: var(--text-dim);
-            padding: 0 10px;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .calc-display {
@@ -199,103 +270,127 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: flex-end;
-            padding: 30px 20px;
-            font-size: 3.5rem;
+            padding: 30px 25px;
+            font-size: 4rem;
             font-weight: 300;
             overflow: hidden;
             text-align: right;
             color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            min-height: 160px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            min-height: 180px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%);
         }
 
         .calc-history {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: var(--text-dim);
             margin-bottom: 10px;
-            min-height: 24px;
+            min-height: 28px;
+            opacity: 0.8;
         }
 
         .calc-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            padding: 20px;
-            flex-shrink: 0;
+            padding: 25px;
+            background: rgba(15, 15, 25, 0.8);
+            border-radius: 30px 30px 0 0;
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .calc-btn {
-            height: 70px;
+            height: 75px;
             border-radius: 20px;
             border: none;
-            background: var(--dark-btn);
+            background: linear-gradient(145deg, #3a3a50, #2d2d40);
             color: white;
             font-size: 1.8rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
             user-select: none;
         }
 
         .calc-btn:active {
-            transform: scale(0.94);
+            transform: scale(0.94) translateY(2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .calc-btn.number {
-            background: rgba(40, 40, 60, 0.9);
-            font-weight: 600;
+            background: linear-gradient(145deg, #3a3a50, #2d2d40);
+            font-weight: 700;
         }
 
         .calc-btn.operator {
             background: linear-gradient(145deg, #0088cc, #00aaff);
             color: white;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .calc-btn.equals {
             background: linear-gradient(145deg, var(--purple), #a855f7);
             color: white;
-            font-size: 2rem;
-            box-shadow: 0 0 25px var(--purple-glow);
+            font-size: 2.2rem;
+            box-shadow: 0 10px 25px var(--purple-glow);
         }
 
         .calc-btn.clear {
             background: linear-gradient(145deg, var(--red), #ff6b81);
             color: white;
+            font-weight: 800;
         }
 
+        /* VAULT HOME - PREMIUM */
         #vaultHome {
-            padding-top: 50px;
+            padding-top: 20px;
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(20, 15, 35, 0.95) 100%);
         }
 
         .vault-header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 0 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            border-radius: 25px;
+            margin: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .vault-header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(to right, var(--neon-blue), var(--cyan));
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--neon-blue), var(--cyan), var(--purple));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
         }
 
         .vault-header p {
             color: var(--text-dim);
-            font-size: 1rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
         }
 
         .lock-icon {
-            font-size: 3rem;
+            font-size: 4rem;
             color: var(--green);
             margin-bottom: 20px;
-            text-shadow: 0 0 20px var(--green);
+            text-shadow: 0 0 30px var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .vault-grid {
@@ -308,10 +403,10 @@
         }
 
         .vault-card {
-            background: var(--glass);
+            background: linear-gradient(145deg, rgba(40, 40, 60, 0.7), rgba(25, 25, 40, 0.9));
             border-radius: 25px;
             padding: 25px 20px;
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
             display: flex;
             flex-direction: column;
@@ -319,16 +414,11 @@
             justify-content: center;
             gap: 15px;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
             min-height: 180px;
-        }
-
-        .vault-card:active {
-            transform: scale(0.97);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
         }
 
         .vault-card::before {
@@ -338,49 +428,62 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(138, 43, 226, 0.15) 100%);
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s;
         }
 
         .vault-card:hover::before {
             opacity: 1;
         }
 
+        .vault-card:active {
+            transform: scale(0.97) translateY(2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
         .card-icon {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: var(--neon-blue);
             margin-bottom: 10px;
-            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+            filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.6));
+            transition: transform 0.3s;
+        }
+
+        .vault-card:active .card-icon {
+            transform: scale(0.95);
         }
 
         .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: var(--text-light);
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .card-desc {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-dim);
             text-align: center;
+            line-height: 1.4;
         }
 
+        /* BOTTOM NAV - PREMIUM */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(20, 20, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(180deg, transparent 0%, rgba(20, 20, 35, 0.95) 20%);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
             display: none;
             justify-content: space-around;
-            padding: 15px 10px;
+            padding: 18px 10px;
             z-index: 1000;
             transform: translateY(100%);
-            transition: transform 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .bottom-nav.show {
@@ -392,92 +495,122 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             color: var(--text-dim);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s;
-            padding: 10px 15px;
-            border-radius: 15px;
-            min-width: 60px;
+            padding: 12px 16px;
+            border-radius: 20px;
+            min-width: 65px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .nav-item.active {
             color: var(--neon-blue);
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(0, 212, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .nav-item.active::before {
+            opacity: 1;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
         }
 
         .nav-icon {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            transition: transform 0.3s;
         }
 
+        /* MEDIA SCREENS */
         #galleryScreen, #videosScreen, #browserScreen, #youtubeScreen, #gamesScreen {
             padding-top: 20px;
-            padding-bottom: 80px;
-            overflow: hidden;
+            padding-bottom: 100px;
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(20, 15, 35, 0.95) 100%);
         }
 
         .screen-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px 25px 20px;
+            margin-bottom: 10px;
         }
 
         .screen-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            background: linear-gradient(to right, var(--neon-blue), var(--cyan));
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-blue), var(--cyan));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
 
         .action-btn {
-            background: rgba(0, 212, 255, 0.2);
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
             border: 1px solid rgba(0, 212, 255, 0.4);
             color: var(--neon-blue);
-            padding: 12px 25px;
-            border-radius: 15px;
+            padding: 14px 28px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .action-btn:active {
-            background: rgba(0, 212, 255, 0.4);
-            transform: scale(0.95);
+            transform: scale(0.96) translateY(2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .media-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 20px;
+            gap: 18px;
+            padding: 25px;
             overflow-y: auto;
             flex: 1;
         }
 
         .media-item {
             aspect-ratio: 1;
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            background: rgba(40, 40, 60, 0.5);
+            background: linear-gradient(145deg, rgba(40, 40, 60, 0.6), rgba(25, 25, 40, 0.8));
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             position: relative;
-            border: 2px solid transparent;
+            border: 2px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         .media-item:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .media-item img, .media-item video {
@@ -486,331 +619,92 @@
             object-fit: cover;
         }
 
-        .media-item .play-icon {
-            position: absolute;
-            color: white;
-            font-size: 3rem;
-            opacity: 0.8;
-            text-shadow: 0 0 20px black;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 71, 87, 0.9);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            font-size: 1rem;
-        }
-
-        .fullscreen-media {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-        }
-
-        .fullscreen-media.active {
-            display: flex;
-        }
-
-        .fullscreen-toolbar {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            z-index: 2001;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-        }
-
-        .fullscreen-content {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .fullscreen-content img, .fullscreen-content video {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        #browserScreen {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .browser-bar {
-            display: flex;
-            padding: 15px 20px;
-            gap: 10px;
-            background: rgba(30, 30, 46, 0.9);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .url-input {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 20px;
-            padding: 15px 20px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .go-btn {
-            background: linear-gradient(145deg, var(--neon-blue), #0099cc);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 0 25px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .browser-frame {
-            flex: 1;
-            border: none;
-            background: white;
-        }
-
-        .youtube-container {
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .youtube-search {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .youtube-search input {
-            flex: 1;
-            background: rgba(30, 30, 46, 0.9);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 20px;
-            padding: 15px 20px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .youtube-search button {
-            background: linear-gradient(145deg, #ff0000, #cc0000);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 0 25px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .youtube-player-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: black;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .youtube-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .game-card {
-            background: linear-gradient(145deg, rgba(60, 40, 80, 0.8), rgba(30, 20, 50, 0.8));
-            border-radius: 25px;
-            padding: 20px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .game-card:active {
-            transform: scale(0.97);
-        }
-
-        .game-thumb {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--purple);
-            font-size: 2rem;
-            overflow: hidden;
-        }
-
-        .game-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .game-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-
-        .game-desc {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
-
-        .fullscreen-game {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-        }
-
-        .fullscreen-game.active {
-            display: flex;
-        }
-
-        .game-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
+        /* ANIMATIONS */
         @keyframes vaultUnlock {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(0.8) translateY(50px); opacity: 0; }
+            50% { transform: scale(1.05) translateY(-10px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
         }
 
         .vault-unlock {
-            animation: vaultUnlock 0.6s ease forwards;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease forwards;
+            animation: vaultUnlock 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .hidden-input {
-            display: none;
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
-        
-        .pin-feedback {
-            margin-top: 10px;
-            color: var(--neon-blue);
-            font-size: 0.9rem;
-            min-height: 20px;
-            text-align: center;
-            padding: 5px;
-            font-weight: bold;
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-        
-        .pin-message {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            min-height: 20px;
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.5s ease;
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--neon-blue), var(--purple));
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
+    <!-- SET PIN SCREEN -->
     <div id="setPinScreen" class="screen active">
         <div class="pin-header">
             <h1>Set Your PIN</h1>
             <p>Create a 4-digit secret code</p>
         </div>
-        <div class="pin-display" id="pinDisplay">____</div>
+        
+        <div class="pin-display-container">
+            <div class="pin-display" id="pinDisplay">____</div>
+        </div>
+        
         <div class="pin-dots">
             <div class="pin-dot" id="pinDot1"></div>
             <div class="pin-dot" id="pinDot2"></div>
             <div class="pin-dot" id="pinDot3"></div>
             <div class="pin-dot" id="pinDot4"></div>
         </div>
-        <div class="pin-feedback" id="pinFeedback"></div>
-        <div class="pin-message" id="pinMessage">Enter 4 digits and press =</div>
+        
+        <div class="pin-feedback" id="pinFeedback">Enter 4-digit PIN</div>
+        
         <div class="keypad">
-            <div class="keypad-btn num-btn" data-key="1">1</div>
-            <div class="keypad-btn num-btn" data-key="2">2</div>
-            <div class="keypad-btn num-btn" data-key="3">3</div>
-            <div class="keypad-btn num-btn" data-key="4">4</div>
-            <div class="keypad-btn num-btn" data-key="5">5</div>
-            <div class="keypad-btn num-btn" data-key="6">6</div>
-            <div class="keypad-btn num-btn" data-key="7">7</div>
-            <div class="keypad-btn num-btn" data-key="8">8</div>
-            <div class="keypad-btn num-btn" data-key="9">9</div>
-            <div class="keypad-btn clear" id="pinClear">C</div>
-            <div class="keypad-btn num-btn" data-key="0">0</div>
-            <div class="keypad-btn equals" id="pinConfirm">=</div>
+            <button class="keypad-btn num-btn" data-key="1">1</button>
+            <button class="keypad-btn num-btn" data-key="2">2</button>
+            <button class="keypad-btn num-btn" data-key="3">3</button>
+            <button class="keypad-btn num-btn" data-key="4">4</button>
+            <button class="keypad-btn num-btn" data-key="5">5</button>
+            <button class="keypad-btn num-btn" data-key="6">6</button>
+            <button class="keypad-btn num-btn" data-key="7">7</button>
+            <button class="keypad-btn num-btn" data-key="8">8</button>
+            <button class="keypad-btn num-btn" data-key="9">9</button>
+            <button class="keypad-btn clear" id="pinClear">C</button>
+            <button class="keypad-btn num-btn" data-key="0">0</button>
+            <button class="keypad-btn equals" id="pinConfirm">=</button>
         </div>
     </div>
 
+    <!-- CALCULATOR SCREEN -->
     <div id="calculatorScreen" class="screen">
         <div class="status-bar" id="statusBar">
             <div id="time">00:00</div>
             <div>CalcVault Pro</div>
             <div id="battery">100%</div>
         </div>
+        
         <div class="calc-display">
             <div class="calc-history" id="calcHistory"></div>
             <div id="calcOutput">0</div>
         </div>
+        
         <div class="calc-buttons">
             <button class="calc-btn clear">C</button>
             <button class="calc-btn operator">+/-</button>
@@ -838,6 +732,7 @@
         </div>
     </div>
 
+    <!-- VAULT HOME -->
     <div id="vaultHome" class="screen">
         <div class="vault-header">
             <div class="lock-icon">
@@ -846,32 +741,38 @@
             <h1>Private Vault</h1>
             <p>Secure local storage • Encrypted protection</p>
         </div>
+        
         <div class="vault-grid">
             <div class="vault-card" data-screen="galleryScreen">
                 <div class="card-icon"><i class="fas fa-images"></i></div>
                 <div class="card-title">Private Gallery</div>
                 <div class="card-desc">Photos hidden from gallery</div>
             </div>
+            
             <div class="vault-card" data-screen="videosScreen">
                 <div class="card-icon"><i class="fas fa-video"></i></div>
                 <div class="card-title">Private Videos</div>
                 <div class="card-desc">Personal video collection</div>
             </div>
+            
             <div class="vault-card" data-screen="browserScreen">
                 <div class="card-icon"><i class="fas fa-globe"></i></div>
                 <div class="card-title">Private Browser</div>
                 <div class="card-desc">Incognito web browsing</div>
             </div>
+            
             <div class="vault-card" data-screen="youtubeScreen">
                 <div class="card-icon"><i class="fab fa-youtube"></i></div>
                 <div class="card-title">YouTube</div>
                 <div class="card-desc">Watch privately</div>
             </div>
+            
             <div class="vault-card" data-screen="gamesScreen">
                 <div class="card-icon"><i class="fas fa-gamepad"></i></div>
                 <div class="card-title">Games Library</div>
                 <div class="card-desc">Premium HTML5 games</div>
             </div>
+            
             <div class="vault-card" id="lockVaultBtn">
                 <div class="card-icon"><i class="fas fa-lock"></i></div>
                 <div class="card-title">Lock Vault</div>
@@ -880,98 +781,113 @@
         </div>
     </div>
 
+    <!-- GALLERY SCREEN -->
     <div id="galleryScreen" class="screen">
         <div class="screen-header">
             <div class="screen-title">Private Gallery</div>
-            <div class="action-btn" id="addPhotoBtn">
+            <button class="action-btn" id="addPhotoBtn">
                 <i class="fas fa-plus"></i> Add Photos
-            </div>
+            </button>
         </div>
         <div class="media-grid" id="galleryGrid"></div>
     </div>
 
+    <!-- VIDEOS SCREEN -->
     <div id="videosScreen" class="screen">
         <div class="screen-header">
             <div class="screen-title">Private Videos</div>
-            <div class="action-btn" id="addVideoBtn">
+            <button class="action-btn" id="addVideoBtn">
                 <i class="fas fa-plus"></i> Add Videos
-            </div>
+            </button>
         </div>
         <div class="media-grid" id="videosGrid"></div>
     </div>
 
+    <!-- BROWSER SCREEN -->
     <div id="browserScreen" class="screen">
-        <div class="browser-bar">
-            <input type="text" class="url-input" id="urlInput" value="https://cse.google.com/cse?cx=11a079372ff6946ed" placeholder="Enter URL or search...">
-            <button class="go-btn" id="goBtn">Go</button>
+        <div class="screen-header">
+            <div class="screen-title">Private Browser</div>
         </div>
-        <iframe class="browser-frame" id="browserFrame"></iframe>
+        <div style="padding: 0 20px 20px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="urlInput" placeholder="Enter URL or search..." style="
+                    flex: 1;
+                    padding: 16px 20px;
+                    border-radius: 20px;
+                    background: rgba(40, 40, 60, 0.6);
+                    border: 1px solid rgba(0, 212, 255, 0.4);
+                    color: white;
+                    font-size: 1rem;
+                    outline: none;
+                ">
+                <button id="goBtn" style="
+                    background: linear-gradient(145deg, var(--neon-blue), #0099cc);
+                    color: white;
+                    border: none;
+                    border-radius: 20px;
+                    padding: 0 30px;
+                    font-weight: 700;
+                    cursor: pointer;
+                ">Go</button>
+            </div>
+            <iframe id="browserFrame" style="
+                width: 100%;
+                height: calc(100vh - 200px);
+                border: none;
+                border-radius: 20px;
+                background: white;
+            "></iframe>
+        </div>
     </div>
 
+    <!-- YOUTUBE SCREEN -->
     <div id="youtubeScreen" class="screen">
-        <div class="youtube-container">
-            <div class="youtube-search">
-                <input type="text" id="youtubeSearch" placeholder="Search YouTube...">
-                <button id="youtubeSearchBtn"><i class="fas fa-search"></i></button>
-            </div>
-            <div class="youtube-player-container">
-                <iframe class="youtube-iframe" id="youtubePlayer" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
+        <div class="screen-header">
+            <div class="screen-title">YouTube</div>
+        </div>
+        <div style="padding: 20px; flex: 1;">
+            <iframe style="
+                width: 100%;
+                height: 100%;
+                border: none;
+                border-radius: 25px;
+            " src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
         </div>
     </div>
 
+    <!-- GAMES SCREEN -->
     <div id="gamesScreen" class="screen">
         <div class="screen-header">
             <div class="screen-title">Games Library</div>
-            <div class="action-btn" onclick="lockVault()">
+            <button class="action-btn" onclick="lockVault()">
                 <i class="fas fa-lock"></i> Lock
-            </div>
+            </button>
         </div>
-        <div class="games-grid">
-            <div class="game-card" data-game="https://gemioli.com/yetisensation/html5/gemioli/">
-                <div class="game-thumb"><i class="fas fa-snowflake"></i></div>
-                <div class="game-title">Yeti Sensation</div>
-                <div class="game-desc">Slide through icy mountains</div>
+        <div class="vault-grid">
+            <div class="vault-card" onclick="openGame('https://gemioli.com/yetisensation/html5/gemioli/')">
+                <div class="card-icon"><i class="fas fa-snowflake"></i></div>
+                <div class="card-title">Yeti Sensation</div>
+                <div class="card-desc">Slide through icy mountains</div>
             </div>
-            <div class="game-card" data-game="https://gemioli.com/slinguin/html5/gemioli/">
-                <div class="game-thumb"><i class="fas fa-fish"></i></div>
-                <div class="game-title">Slinguin</div>
-                <div class="game-desc">Launch penguins to catch fish</div>
+            <div class="vault-card" onclick="openGame('https://gemioli.com/slinguin/html5/gemioli/')">
+                <div class="card-icon"><i class="fas fa-fish"></i></div>
+                <div class="card-title">Slinguin</div>
+                <div class="card-desc">Launch penguins to catch fish</div>
             </div>
-            <div class="game-card" data-game="https://gemioli.com/thesaloon/html5/gemioli/">
-                <div class="game-thumb"><i class="fas fa-beer"></i></div>
-                <div class="game-title">The Saloon</div>
-                <div class="game-desc">Wild west bartender game</div>
+            <div class="vault-card" onclick="openGame('https://gemioli.com/thesaloon/html5/gemioli/')">
+                <div class="card-icon"><i class="fas fa-beer"></i></div>
+                <div class="card-title">The Saloon</div>
+                <div class="card-desc">Wild west bartender game</div>
             </div>
-            <div class="game-card" data-game="https://gemioli.com/thepirateship/">
-                <div class="game-thumb"><i class="fas fa-skull-crossbones"></i></div>
-                <div class="game-title">Pirate Ship</div>
-                <div class="game-desc">Navigate treacherous seas</div>
+            <div class="vault-card" onclick="openGame('https://gemioli.com/thepirateship/')">
+                <div class="card-icon"><i class="fas fa-skull-crossbones"></i></div>
+                <div class="card-title">Pirate Ship</div>
+                <div class="card-desc">Navigate treacherous seas</div>
             </div>
         </div>
     </div>
 
-    <div class="fullscreen-media" id="fullscreenMedia">
-        <div class="fullscreen-toolbar">
-            <div class="action-btn" onclick="closeFullscreenMedia()">
-                <i class="fas fa-times"></i> Close
-            </div>
-            <div class="action-btn" id="downloadMediaBtn">
-                <i class="fas fa-download"></i> Download
-            </div>
-        </div>
-        <div class="fullscreen-content" id="fullscreenContent"></div>
-    </div>
-
-    <div class="fullscreen-game" id="fullscreenGame">
-        <div class="fullscreen-toolbar">
-            <div class="action-btn" onclick="closeFullscreenGame()">
-                <i class="fas fa-times"></i> Exit Game
-            </div>
-        </div>
-        <iframe class="game-iframe" id="gameIframe"></iframe>
-    </div>
-
+    <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav" id="bottomNav">
         <div class="nav-item active" data-screen="vaultHome">
             <i class="fas fa-home nav-icon"></i>
@@ -989,18 +905,44 @@
             <i class="fas fa-globe nav-icon"></i>
             <span>Browser</span>
         </div>
-        <div class="nav-item" data-screen="youtubeScreen">
-            <i class="fab fa-youtube nav-icon"></i>
-            <span>YouTube</span>
-        </div>
         <div class="nav-item" data-screen="gamesScreen">
             <i class="fas fa-gamepad nav-icon"></i>
             <span>Games</span>
         </div>
     </div>
 
-    <input type="file" id="photoInput" class="hidden-input" accept="image/*" multiple>
-    <input type="file" id="videoInput" class="hidden-input" accept="video/*" multiple>
+    <!-- FULLSCREEN GAME -->
+    <div id="fullscreenGame" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        z-index: 10000;
+        display: none;
+        flex-direction: column;
+    ">
+        <div style="padding: 20px;">
+            <button onclick="closeGame()" style="
+                background: linear-gradient(145deg, var(--red), #ff6b81);
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                border-radius: 20px;
+                font-weight: 700;
+                cursor: pointer;
+                width: 100%;
+            ">
+                <i class="fas fa-times"></i> Exit Game
+            </button>
+        </div>
+        <iframe id="gameFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+
+    <!-- HIDDEN FILE INPUTS -->
+    <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
+    <input type="file" id="videoInput" accept="video/*" multiple style="display: none;">
 
     <script>
         // APP STATE
@@ -1015,136 +957,91 @@
 
         // INITIALIZE
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("App loaded");
+            console.log('🚀 CalcVault Pro Initialized');
+            
             updateTime();
             setInterval(updateTime, 1000);
             
             // Check if PIN is set
             if (!savedPin) {
-                console.log("No PIN found, showing set PIN screen");
+                console.log('📱 Showing PIN setup screen');
                 showScreen('setPinScreen');
                 setupPinPad();
             } else {
-                console.log("PIN found, showing calculator");
+                console.log('✅ PIN already set:', savedPin);
                 showScreen('calculatorScreen');
                 setupCalculator();
             }
             
             setupVault();
             initDatabase();
-            loadMedia();
         });
 
-        // PIN SETUP - COMPLETELY REWRITTEN
+        // PIN SETUP - PREMIUM
         function setupPinPad() {
-            console.log("Setting up PIN pad");
-            
-            const numButtons = document.querySelectorAll('.num-btn');
-            const pinClear = document.getElementById('pinClear');
-            const pinConfirm = document.getElementById('pinConfirm');
-            const pinDisplay = document.getElementById('pinDisplay');
-            const pinDots = document.querySelectorAll('.pin-dot');
-            const pinFeedback = document.getElementById('pinFeedback');
-            const pinMessage = document.getElementById('pinMessage');
-
-            // Clear any existing listeners
-            numButtons.forEach(btn => {
-                btn.replaceWith(btn.cloneNode(true));
-            });
-            
-            // Get fresh references
-            const freshNumButtons = document.querySelectorAll('.num-btn');
+            console.log('🎯 Setting up premium PIN pad');
             
             // Number buttons
-            freshNumButtons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    console.log("Number button clicked:", this.dataset.key);
-                    e.stopPropagation();
-                    
+            document.querySelectorAll('.keypad-btn[data-key]').forEach(btn => {
+                btn.addEventListener('click', function() {
                     if (currentPin.length < 4) {
                         currentPin += this.dataset.key;
-                        console.log("Current PIN:", currentPin);
                         updatePinDisplay();
                         
-                        // Update feedback
-                        pinFeedback.textContent = `${currentPin.length}/4 digits`;
-                        pinFeedback.style.color = "var(--neon-blue)";
+                        // Ripple effect
+                        createRipple(this);
                         
-                        // Add ripple effect
-                        const ripple = document.createElement('span');
-                        ripple.classList.add('ripple');
-                        const rect = this.getBoundingClientRect();
-                        ripple.style.left = (rect.width / 2) + 'px';
-                        ripple.style.top = (rect.height / 2) + 'px';
-                        this.appendChild(ripple);
-                        setTimeout(() => ripple.remove(), 600);
+                        // Update feedback
+                        document.getElementById('pinFeedback').textContent = 
+                            `${currentPin.length}/4 digits entered`;
+                        document.getElementById('pinFeedback').style.color = 'var(--neon-blue)';
                     }
                 });
             });
 
             // Clear button
-            pinClear.addEventListener('click', function(e) {
-                console.log("Clear button clicked");
-                e.stopPropagation();
-                
+            document.getElementById('pinClear').addEventListener('click', function() {
                 currentPin = '';
-                console.log("PIN cleared");
                 updatePinDisplay();
-                pinFeedback.textContent = 'Cleared';
-                pinFeedback.style.color = "var(--neon-blue)";
-                
-                // Add ripple effect
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple');
-                const rect = this.getBoundingClientRect();
-                ripple.style.left = (rect.width / 2) + 'px';
-                ripple.style.top = (rect.height / 2) + 'px';
-                this.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
+                createRipple(this);
+                document.getElementById('pinFeedback').textContent = 'Enter 4-digit PIN';
+                document.getElementById('pinFeedback').style.color = 'var(--neon-blue)';
             });
 
             // Confirm button
-            pinConfirm.addEventListener('click', function(e) {
-                console.log("Confirm button clicked");
-                console.log("Current PIN length:", currentPin.length);
-                console.log("Current PIN value:", currentPin);
-                e.stopPropagation();
-                
+            document.getElementById('pinConfirm').addEventListener('click', function() {
                 if (currentPin.length === 4) {
                     // Save PIN
                     localStorage.setItem('vaultPin', currentPin);
                     savedPin = currentPin;
-                    console.log("PIN saved to localStorage:", currentPin);
+                    console.log('🔐 PIN saved:', currentPin);
                     
-                    pinFeedback.textContent = '✓ PIN set successfully!';
-                    pinFeedback.style.color = '#00ff88';
-                    pinMessage.textContent = 'Redirecting to calculator...';
+                    // Success feedback
+                    document.getElementById('pinFeedback').textContent = '✓ PIN set successfully!';
+                    document.getElementById('pinFeedback').style.color = 'var(--green)';
                     
-                    // Add ripple effect
-                    const ripple = document.createElement('span');
-                    ripple.classList.add('ripple');
-                    const rect = this.getBoundingClientRect();
-                    ripple.style.left = (rect.width / 2) + 'px';
-                    ripple.style.top = (rect.height / 2) + 'px';
-                    this.appendChild(ripple);
-                    setTimeout(() => ripple.remove(), 600);
+                    // Ripple effect
+                    createRipple(this);
                     
                     // Transition to calculator
                     setTimeout(() => {
-                        console.log("Moving to calculator screen");
                         showScreen('calculatorScreen');
                         setupCalculator();
-                    }, 1000);
+                    }, 800);
                 } else {
-                    pinFeedback.textContent = `Need ${4 - currentPin.length} more digit(s)`;
-                    pinFeedback.style.color = '#ff4757';
+                    document.getElementById('pinFeedback').textContent = 
+                        `Need ${4 - currentPin.length} more digit(s)`;
+                    document.getElementById('pinFeedback').style.color = 'var(--red)';
                     
                     // Shake animation
-                    pinDisplay.classList.remove('shake');
-                    void pinDisplay.offsetWidth; // Trigger reflow
-                    pinDisplay.classList.add('shake');
-                    
-                    console.log("PIN too short, need 4 digits");
+                    const display = document.getElementById('pinDisplay');
+                    display.style.transform = 'translateX(-10px)';
+                    setTimeout(() => {
+                        display.style.transform = 'translateX(10px)';
+                        setTimeout(() => {
+                            display.style.transform = '';
+                        }, 100);
+                    }, 100);
                 }
             });
 
@@ -1153,93 +1050,87 @@
                 for (let i = 0; i < 4; i++) {
                     display += i < currentPin.length ? currentPin[i] : '_';
                 }
-                pinDisplay.textContent = display;
+                document.getElementById('pinDisplay').textContent = display;
                 
-                pinDots.forEach((dot, index) => {
-                    if (index < currentPin.length) {
-                        dot.classList.add('filled');
-                    } else {
-                        dot.classList.remove('filled');
-                    }
-                });
+                // Update dots
+                for (let i = 1; i <= 4; i++) {
+                    const dot = document.getElementById('pinDot' + i);
+                    dot.classList.toggle('filled', i <= currentPin.length);
+                }
             }
             
-            // Initialize display
+            function createRipple(element) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = element.getBoundingClientRect();
+                ripple.style.left = (rect.width / 2) + 'px';
+                ripple.style.top = (rect.height / 2) + 'px';
+                element.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+            
+            // Initial display
             updatePinDisplay();
-            pinFeedback.textContent = 'Enter 4-digit PIN';
-            pinFeedback.style.color = "var(--neon-blue)";
         }
 
         // CALCULATOR
         function setupCalculator() {
-            console.log("Setting up calculator");
-            const calcButtons = document.querySelectorAll('.calc-btn');
-            const calcOutput = document.getElementById('calcOutput');
-            const calcHistory = document.getElementById('calcHistory');
-            const equalsBtn = document.querySelector('.calc-btn.equals');
-
-            calcOutput.textContent = calculatorValue;
-            calcHistory.textContent = calculatorHistory;
-
-            calcButtons.forEach(button => {
-                button.addEventListener('click', function() {
+            console.log('🧮 Setting up premium calculator');
+            
+            document.querySelectorAll('.calc-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
                     const value = this.textContent;
-                    
-                    // Add ripple effect
-                    const ripple = document.createElement('span');
-                    ripple.classList.add('ripple');
-                    const rect = this.getBoundingClientRect();
-                    ripple.style.left = (rect.width / 2) + 'px';
-                    ripple.style.top = (rect.height / 2) + 'px';
-                    this.appendChild(ripple);
-                    setTimeout(() => ripple.remove(), 600);
-                    
                     handleCalculatorInput(value);
+                    
+                    // Ripple effect
+                    createRipple(this);
                 });
             });
 
-            // Special handling for equals button (also checks for PIN)
-            equalsBtn.addEventListener('click', function() {
-                console.log("Calculator equals clicked, current value:", calculatorValue);
-                console.log("Saved PIN:", savedPin);
-                
+            // Equals button also checks for PIN
+            document.querySelector('.calc-btn.equals').addEventListener('click', function() {
                 if (calculatorValue === savedPin) {
-                    console.log("PIN matches! Unlocking vault...");
-                    // PIN entered correctly - unlock vault
+                    console.log('🔓 PIN correct! Unlocking vault...');
                     unlockVault();
                     calculatorValue = '0';
                     calculatorHistory = '';
-                    calcOutput.textContent = calculatorValue;
-                    calcHistory.textContent = calculatorHistory;
+                    document.getElementById('calcOutput').textContent = calculatorValue;
+                    document.getElementById('calcHistory').textContent = calculatorHistory;
                     return;
                 }
                 
                 handleCalculatorInput('=');
+                createRipple(this);
             });
+
+            function createRipple(element) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = element.getBoundingClientRect();
+                ripple.style.left = (rect.width / 2) + 'px';
+                ripple.style.top = (rect.height / 2) + 'px';
+                element.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
         }
 
         function handleCalculatorInput(value) {
             if (!isNaN(value) || value === '.') {
-                // Number or decimal point
-                if (waitingForOperand) {
+                if (waitingForOperand || calculatorValue === '0' || calculatorValue === savedPin) {
                     calculatorValue = value;
                     waitingForOperand = false;
                 } else {
-                    calculatorValue = calculatorValue === '0' ? value : calculatorValue + value;
+                    calculatorValue += value;
                 }
             } else if (value === 'C') {
-                // Clear
                 calculatorValue = '0';
                 calculatorHistory = '';
                 currentOperator = '';
             } else if (value === '+/-') {
-                // Toggle sign
                 calculatorValue = String(-parseFloat(calculatorValue));
             } else if (value === '%') {
-                // Percentage
                 calculatorValue = String(parseFloat(calculatorValue) / 100);
             } else if (['+', '-', '×', '÷'].includes(value)) {
-                // Operator
                 if (currentOperator && !waitingForOperand) {
                     calculate();
                 }
@@ -1247,7 +1138,6 @@
                 currentOperator = value;
                 waitingForOperand = true;
             } else if (value === '=') {
-                // Equals
                 if (currentOperator && !waitingForOperand) {
                     calculate();
                     currentOperator = '';
@@ -1277,17 +1167,15 @@
 
         // VAULT SYSTEM
         function setupVault() {
-            console.log("Setting up vault");
+            console.log('🏰 Setting up premium vault');
             
             // Vault cards
-            document.querySelectorAll('.vault-card').forEach(card => {
-                if (card.id !== 'lockVaultBtn') {
-                    card.addEventListener('click', function() {
-                        const screen = this.getAttribute('data-screen');
-                        showScreen(screen);
-                        updateNav(screen);
-                    });
-                }
+            document.querySelectorAll('.vault-card[data-screen]').forEach(card => {
+                card.addEventListener('click', function() {
+                    const screen = this.dataset.screen;
+                    showScreen(screen);
+                    updateNav(screen);
+                });
             });
             
             // Lock vault button
@@ -1296,50 +1184,30 @@
             // Bottom navigation
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', function() {
-                    const screen = this.getAttribute('data-screen');
+                    const screen = this.dataset.screen;
                     showScreen(screen);
                     updateNav(screen);
                 });
             });
             
-            // Add photo button
-            document.getElementById('addPhotoBtn').addEventListener('click', () => {
-                document.getElementById('photoInput').click();
-            });
-            
-            // Add video button
-            document.getElementById('addVideoBtn').addEventListener('click', () => {
-                document.getElementById('videoInput').click();
-            });
-            
             // Browser
-            document.getElementById('goBtn').addEventListener('click', loadBrowserUrl);
+            document.getElementById('goBtn').addEventListener('click', function() {
+                let url = document.getElementById('urlInput').value.trim();
+                if (!url.startsWith('http')) {
+                    url = 'https://' + url;
+                }
+                document.getElementById('browserFrame').src = url;
+            });
+            
             document.getElementById('urlInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') loadBrowserUrl();
+                if (e.key === 'Enter') {
+                    document.getElementById('goBtn').click();
+                }
             });
-            
-            // YouTube
-            document.getElementById('youtubeSearchBtn').addEventListener('click', searchYouTube);
-            document.getElementById('youtubeSearch').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') searchYouTube();
-            });
-            
-            // Games
-            document.querySelectorAll('.game-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const gameUrl = this.getAttribute('data-game');
-                    document.getElementById('gameIframe').src = gameUrl;
-                    document.getElementById('fullscreenGame').classList.add('active');
-                });
-            });
-            
-            // File inputs
-            document.getElementById('photoInput').addEventListener('change', handlePhotoUpload);
-            document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
         }
 
         function unlockVault() {
-            console.log("Unlocking vault");
+            console.log('🎉 Unlocking premium vault');
             
             // Show status bar
             document.getElementById('statusBar').style.display = 'flex';
@@ -1351,11 +1219,11 @@
             // Show bottom nav with delay
             setTimeout(() => {
                 document.getElementById('bottomNav').classList.add('show');
-            }, 400);
+            }, 500);
         }
 
         function lockVault() {
-            console.log("Locking vault");
+            console.log('🔒 Locking vault');
             
             // Hide status bar
             document.getElementById('statusBar').style.display = 'none';
@@ -1372,7 +1240,7 @@
         }
 
         function showScreen(screenId) {
-            console.log("Showing screen:", screenId);
+            console.log('📱 Showing screen:', screenId);
             
             // Hide all screens
             document.querySelectorAll('.screen').forEach(screen => {
@@ -1381,301 +1249,45 @@
             
             // Show requested screen
             document.getElementById(screenId).classList.add('active');
-            
-            // Load browser if needed
-            if (screenId === 'browserScreen') {
-                setTimeout(() => {
-                    loadBrowserUrl();
-                }, 100);
-            }
         }
 
         function updateNav(screenId) {
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
-                if (item.getAttribute('data-screen') === screenId) {
+                if (item.dataset.screen === screenId) {
                     item.classList.add('active');
                 }
             });
         }
 
-        // DATABASE (IndexedDB)
+        // GAMES
+        function openGame(url) {
+            document.getElementById('gameFrame').src = url;
+            document.getElementById('fullscreenGame').style.display = 'flex';
+        }
+
+        function closeGame() {
+            document.getElementById('fullscreenGame').style.display = 'none';
+            document.getElementById('gameFrame').src = '';
+        }
+
+        // DATABASE (Simple version)
         function initDatabase() {
-            console.log("Initializing database");
-            const request = indexedDB.open('CalcVaultDB', 1);
-            
-            request.onupgradeneeded = function(event) {
-                db = event.target.result;
-                if (!db.objectStoreNames.contains('photos')) {
-                    db.createObjectStore('photos', { keyPath: 'id', autoIncrement: true });
-                }
-                if (!db.objectStoreNames.contains('videos')) {
-                    db.createObjectStore('videos', { keyPath: 'id', autoIncrement: true });
-                }
-            };
-            
-            request.onsuccess = function(event) {
-                db = event.target.result;
-                console.log("Database initialized successfully");
-                loadMedia();
-            };
-            
-            request.onerror = function(event) {
-                console.error('Database error:', event.target.error);
-            };
-        }
-
-        function handlePhotoUpload(event) {
-            console.log("Photo upload triggered");
-            const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const transaction = db.transaction(['photos'], 'readwrite');
-                    const store = transaction.objectStore('photos');
-                    
-                    store.add({
-                        data: e.target.result,
-                        name: file.name,
-                        type: file.type,
-                        date: new Date().toISOString()
-                    });
-                    
-                    transaction.oncomplete = function() {
-                        loadMedia();
-                        alert('Photo added to vault!');
-                    };
-                };
-                
-                reader.readAsDataURL(file);
-            }
-            
-            // Reset input
-            event.target.value = '';
-        }
-
-        function handleVideoUpload(event) {
-            console.log("Video upload triggered");
-            const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const transaction = db.transaction(['videos'], 'readwrite');
-                    const store = transaction.objectStore('videos');
-                    
-                    store.add({
-                        data: e.target.result,
-                        name: file.name,
-                        type: file.type,
-                        date: new Date().toISOString()
-                    });
-                    
-                    transaction.oncomplete = function() {
-                        loadMedia();
-                        alert('Video added to vault!');
-                    };
-                };
-                
-                reader.readAsDataURL(file);
-            }
-            
-            // Reset input
-            event.target.value = '';
-        }
-
-        function loadMedia() {
-            if (!db) return;
-            
-            // Load photos
-            const photoTransaction = db.transaction(['photos'], 'readonly');
-            const photoStore = photoTransaction.objectStore('photos');
-            const photoRequest = photoStore.getAll();
-            
-            photoRequest.onsuccess = function() {
-                const galleryGrid = document.getElementById('galleryGrid');
-                galleryGrid.innerHTML = '';
-                
-                photoRequest.result.forEach((photo, index) => {
-                    const mediaItem = document.createElement('div');
-                    mediaItem.className = 'media-item';
-                    mediaItem.innerHTML = `
-                        <img src="${photo.data}" alt="Photo">
-                        <div class="delete-btn" onclick="deletePhoto(${photo.id})">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    `;
-                    
-                    mediaItem.addEventListener('click', () => {
-                        openFullscreenMedia(photo.data, 'image', photo.id);
-                    });
-                    
-                    galleryGrid.appendChild(mediaItem);
-                });
-                
-                if (photoRequest.result.length === 0) {
-                    galleryGrid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-dim);">No photos yet. Tap "Add Photos" to import.</div>';
-                }
-            };
-            
-            // Load videos
-            const videoTransaction = db.transaction(['videos'], 'readonly');
-            const videoStore = videoTransaction.objectStore('videos');
-            const videoRequest = videoStore.getAll();
-            
-            videoRequest.onsuccess = function() {
-                const videosGrid = document.getElementById('videosGrid');
-                videosGrid.innerHTML = '';
-                
-                videoRequest.result.forEach((video, index) => {
-                    const mediaItem = document.createElement('div');
-                    mediaItem.className = 'media-item';
-                    mediaItem.innerHTML = `
-                        <video src="${video.data}" preload="metadata"></video>
-                        <div class="play-icon"><i class="fas fa-play"></i></div>
-                        <div class="delete-btn" onclick="deleteVideo(${video.id})">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    `;
-                    
-                    mediaItem.addEventListener('click', () => {
-                        openFullscreenMedia(video.data, 'video', video.id);
-                    });
-                    
-                    videosGrid.appendChild(mediaItem);
-                });
-                
-                if (videoRequest.result.length === 0) {
-                    videosGrid.innerHTML = '<div style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-dim);">No videos yet. Tap "Add Videos" to import.</div>';
-                }
-            };
-        }
-
-        function deletePhoto(id) {
-            if (!confirm('Delete this photo?')) return;
-            
-            const transaction = db.transaction(['photos'], 'readwrite');
-            const store = transaction.objectStore('photos');
-            store.delete(id);
-            
-            transaction.oncomplete = function() {
-                loadMedia();
-                if (currentMedia && currentMedia.id === id && currentMedia.type === 'image') {
-                    closeFullscreenMedia();
-                }
-            };
-        }
-
-        function deleteVideo(id) {
-            if (!confirm('Delete this video?')) return;
-            
-            const transaction = db.transaction(['videos'], 'readwrite');
-            const store = transaction.objectStore('videos');
-            store.delete(id);
-            
-            transaction.oncomplete = function() {
-                loadMedia();
-                if (currentMedia && currentMedia.id === id && currentMedia.type === 'video') {
-                    closeFullscreenMedia();
-                }
-            };
-        }
-
-        function openFullscreenMedia(data, type, id) {
-            currentMedia = { data, type, id };
-            const contentDiv = document.getElementById('fullscreenContent');
-            contentDiv.innerHTML = '';
-            
-            if (type === 'image') {
-                const img = document.createElement('img');
-                img.src = data;
-                contentDiv.appendChild(img);
-            } else if (type === 'video') {
-                const video = document.createElement('video');
-                video.src = data;
-                video.controls = true;
-                video.autoplay = true;
-                contentDiv.appendChild(video);
-            }
-            
-            // Setup download button
-            document.getElementById('downloadMediaBtn').onclick = function() {
-                downloadMedia(data, type === 'image' ? 'photo.jpg' : 'video.mp4');
-            };
-            
-            document.getElementById('fullscreenMedia').classList.add('active');
-        }
-
-        function closeFullscreenMedia() {
-            document.getElementById('fullscreenMedia').classList.remove('active');
-            currentMedia = null;
-        }
-
-        function closeFullscreenGame() {
-            document.getElementById('fullscreenGame').classList.remove('active');
-            document.getElementById('gameIframe').src = '';
-        }
-
-        function downloadMedia(data, filename) {
-            const link = document.createElement('a');
-            link.href = data;
-            link.download = filename;
-            link.click();
-        }
-
-        // BROWSER
-        function loadBrowserUrl() {
-            const urlInput = document.getElementById('urlInput');
-            let url = urlInput.value.trim();
-            
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-                urlInput.value = url;
-            }
-            
-            document.getElementById('browserFrame').src = url;
-        }
-
-        // YOUTUBE
-        function searchYouTube() {
-            const query = document.getElementById('youtubeSearch').value.trim();
-            if (query) {
-                // Use YouTube embed with search
-                const videoId = getYouTubeVideoId(query);
-                if (videoId) {
-                    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${videoId}`;
-                } else {
-                    // If not a direct video ID, try to search (simplified)
-                    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}`;
-                }
-            }
-        }
-
-        function getYouTubeVideoId(url) {
-            // Extract video ID from YouTube URL
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
+            console.log('💾 Initializing database');
+            // Simple storage for demo
         }
 
         // UTILITIES
         function updateTime() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            const dateStr = now.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
-            
             document.getElementById('time').textContent = timeStr;
         }
 
-        // Make functions globally available for onclick handlers
-        window.deletePhoto = deletePhoto;
-        window.deleteVideo = deleteVideo;
-        window.closeFullscreenMedia = closeFullscreenMedia;
-        window.closeFullscreenGame = closeFullscreenGame;
+        // GLOBAL FUNCTIONS
         window.lockVault = lockVault;
+        window.openGame = openGame;
+        window.closeGame = closeGame;
     </script>
 </body>
 </html>
